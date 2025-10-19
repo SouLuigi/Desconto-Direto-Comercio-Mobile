@@ -1,8 +1,11 @@
-import 'dart:convert';
-import 'package:desconto_direto_comercio_mobile/data/repositories/commerce_add_repository.dart';
-import 'package:http/http.dart' as http;
+// Dart imports:
+
+// Package imports:
+
+// Project imports:
 import '../model/commerce_add_model.dart';
 import '../model/commerce_model.dart';
+import '../repositories/commerce_add_repository.dart';
 
 class CommerceAddService {
   final CommerceAddRepository _repository;
@@ -17,10 +20,12 @@ class CommerceAddService {
       final jsonResponse = await _repository.sendCreationRequest(data);
 
       // 3. Converte o JSON em Model de Negócio
-     return CommerceModel.fromJson(jsonResponse);
+      return CommerceModel.fromJson(jsonResponse);
     } catch (e) {
       // 4. Trata ou re-lança exceções para a camada de UI
-      throw Exception('Falha completa ao cadastrar o comércio. Tente novamente. Detalhes: $e');
+      throw Exception(
+        'Falha completa ao cadastrar o comércio. Tente novamente. Detalhes: $e',
+      );
     }
   }
 }
