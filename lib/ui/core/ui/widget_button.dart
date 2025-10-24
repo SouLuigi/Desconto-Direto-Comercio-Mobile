@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+import '../themes/colors.dart';
 
 class WidgetButton extends StatelessWidget {
 
@@ -12,15 +15,15 @@ class WidgetButton extends StatelessWidget {
     Key? key,
     required this.text,
     required this.onPressed,
-    this.color = Colors.blue,
-    this.textColor = Colors.black,
+    this.color = AppColors.Blue1,
+    this.textColor = AppColors.White1,
   }): super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 250,
-      height: 50,
+      width: 220,
+      height: 40,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: color,
@@ -31,7 +34,13 @@ class WidgetButton extends StatelessWidget {
         onPressed: onPressed,
         child: Text(
           text,
-          style: TextStyle(color: textColor, fontSize: 16),
+          style: GoogleFonts.kaiseiDecol(
+            textStyle: const TextStyle(
+              color: AppColors.White1,
+              fontWeight: FontWeight.w400,
+              fontSize: 19,
+            )
+          ),
         )
       ),
     );
