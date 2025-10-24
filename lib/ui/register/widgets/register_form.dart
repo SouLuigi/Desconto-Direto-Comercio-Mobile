@@ -1,7 +1,9 @@
 import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
+import '../../core/ui/widget_button.dart';
 import 'register_form_input.dart';
 
 class RegisterForm extends StatelessWidget {
@@ -14,10 +16,12 @@ class RegisterForm extends StatelessWidget {
       children: [
         Text(
           'Cadastro',
-          style: TextStyle(
-            fontSize: 30,
-            fontWeight: FontWeight.bold,
-            color: AppColors.White1,
+          style: GoogleFonts.kaiseiDecol(
+            textStyle: const TextStyle(
+              color: AppColors.White1,
+              fontWeight: FontWeight.w400,
+              fontSize: 30,
+            ),
           ),
           textAlign: TextAlign.center,
         ),
@@ -30,17 +34,34 @@ class RegisterForm extends StatelessWidget {
         RegisterFormInput(name: 'Email', label: 'Email'),
         RegisterFormInput(name: 'Senha', label: 'Senha'),
         RegisterFormInput(name: 'Confirmar Senha', label: 'Confirmar Senha'),
-        GestureDetector(
-          onTap: () {
-            print('Texto clicado');
-          },
-          child: Text(
-            'Esqueceu a senha?',
-            style: TextStyle(color: AppColors.White1),
-          ),
+        Column(
+          spacing: 6,
+          children: [
+            GestureDetector(
+              onTap: () {
+                print('Texto clicado');
+              },
+              child: Text(
+                'Esqueceu a senha?',
+                style: GoogleFonts.kaiseiDecol(
+                  textStyle: const TextStyle(
+                    color: AppColors.White1,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 17,
+                  ),
+                ),
+              ),
+            ),
+            WidgetButton(
+              text: 'Cadastrar',
+              onPressed: () {},
+            ),
+            WidgetButton(
+              text: 'Entrar',
+              onPressed: () {},
+            ),
+          ],
         ),
-        ElevatedButton(onPressed: () {}, child: Text('Cadastrar')),
-        ElevatedButton(onPressed: () {}, child: Text('Entrar')),
       ],
     );
   }

@@ -25,6 +25,7 @@ class RegisterFormInput extends StatelessWidget {
     return FormBuilderTextField(
       name: name,
       decoration: InputDecoration(
+        contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
         labelText: label,
         labelStyle: TextStyle(color: Color(0xFFFFB703)),
         floatingLabelStyle: TextStyle(color: Color(0xFF023047)),
