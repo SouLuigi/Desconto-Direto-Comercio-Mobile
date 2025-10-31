@@ -12,7 +12,7 @@ class RegisterForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      spacing: 10,
+      spacing: 15,
       children: [
         Text(
           'Cadastro',
@@ -20,7 +20,7 @@ class RegisterForm extends StatelessWidget {
             textStyle: const TextStyle(
               color: AppColors.White1,
               fontWeight: FontWeight.w400,
-              fontSize: 30,
+              fontSize: 35,
             ),
           ),
           textAlign: TextAlign.center,
@@ -30,12 +30,12 @@ class RegisterForm extends StatelessWidget {
           name: 'Categoria',
           label: 'Categoria ex: ( Mercado, Padaria)',
         ),
-        RegisterFormInput(name: 'Telefone', label: 'Telefone'),
-        RegisterFormInput(name: 'Email', label: 'Email'),
-        RegisterFormInput(name: 'Senha', label: 'Senha'),
-        RegisterFormInput(name: 'Confirmar Senha', label: 'Confirmar Senha'),
+        RegisterFormInput(name: 'Telefone', label: 'Telefone',keyboardType: TextInputType.phone),
+        RegisterFormInput(name: 'Email', label: 'Email',keyboardType: TextInputType.emailAddress),
+        RegisterFormInput(name: 'Senha', label: 'Senha',obscureText: true,),
+        RegisterFormInput(name: 'Confirmar Senha', label: 'Confirmar Senha',obscureText: true,),
         Column(
-          spacing: 6,
+          spacing: 20,
           children: [
             GestureDetector(
               onTap: () {
@@ -47,17 +47,13 @@ class RegisterForm extends StatelessWidget {
                   textStyle: const TextStyle(
                     color: AppColors.White1,
                     fontWeight: FontWeight.w400,
-                    fontSize: 17,
+                    fontSize: 14,
                   ),
                 ),
               ),
             ),
             WidgetButton(
-              text: 'Cadastrar',
-              onPressed: () {},
-            ),
-            WidgetButton(
-              text: 'Entrar',
+              text: 'Avançar',
               onPressed: () {},
             ),
           ],

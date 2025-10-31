@@ -23,12 +23,12 @@ class WidgetButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 220,
-      height: 40,
+      height: 50,
       child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: color,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15),
+              borderRadius: BorderRadius.circular(40),
             ),
           ),
         onPressed: onPressed,
@@ -38,7 +38,7 @@ class WidgetButton extends StatelessWidget {
             textStyle: const TextStyle(
               color: AppColors.White1,
               fontWeight: FontWeight.w400,
-              fontSize: 19,
+              fontSize: 17,
             )
           ),
         )

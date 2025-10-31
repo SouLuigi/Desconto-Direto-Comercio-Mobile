@@ -12,22 +12,22 @@ class RegisterScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.Blue1,
-        body: SingleChildScrollView(
-          child: Column(
-             mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 40.0, bottom: 40.0),
-                  child: Image.asset(
-                    'assets/Logo.png',
-                    width: 200,
-                    height: 200,
-                    fit: BoxFit.scaleDown,
-                  ),
+        body: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40.0, bottom: 40.0),
+                child: Image.asset(
+                  'assets/Logo.png',
+                  width: 200,
+                  height: 200,
+                  fit: BoxFit.scaleDown,
                 ),
               ),
-              Container(
+            ),
+            Expanded(
+              child: Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -36,10 +36,12 @@ class RegisterScreen extends StatelessWidget {
                   ),
                   color: AppColors.Yellow1,
                 ),
-                child: const RegisterForm(),
+                child: SingleChildScrollView(
+                    child: const RegisterForm()
+                ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
