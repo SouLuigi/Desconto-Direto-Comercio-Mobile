@@ -19,13 +19,12 @@ class RegisterScreen extends StatelessWidget {
         backgroundColor: AppColors.Blue1,
         body: ChangeNotifierProvider(
           create: (_) => RegisterViewModel(CommerceAddService(repository)),
-
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 40.0, bottom: 40.0),
+                  padding: const EdgeInsets.only(top: 40.0, bottom: 0.0),
                   child: Image.asset(
                     'assets/Logo.png',
                     width: 200,

@@ -17,104 +17,118 @@ class RegisterForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.read<RegisterViewModel>();
     final status = context.select((RegisterViewModel vm) => vm.status);
-    final _formKey = GlobalKey<FormBuilderState>();
-    return Column(
-      key: _formKey,
-      spacing: 15,
-      children: [
-        Text(
-          'Cadastro',
-          style: GoogleFonts.kaiseiDecol(
-            textStyle: const TextStyle(
-              color: AppColors.White1,
-              fontWeight: FontWeight.w400,
-              fontSize: 35,
+    final formKey = GlobalKey<FormBuilderState>();
+    return FormBuilder(
+      key: formKey,
+      child: Column(
+        spacing: 15,
+        children: [
+          Text(
+            'Cadastro',
+            style: GoogleFonts.kaiseiDecol(
+              textStyle: const TextStyle(
+                color: AppColors.White1,
+                fontWeight: FontWeight.w400,
+                fontSize: 35,
+              ),
             ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
-        ),
-        RegisterFormInput(
-          name: 'nome',
-          label: 'Nome do Comercio',
-          onChanged: (value) => viewModel.setNome(value ?? ''),
-        ),
-        const RegisterFormDropdown(),
-        RegisterFormInput(
-          name: 'telefone',
-          label: 'Telefone',
-          keyboardType: TextInputType.phone,
-          onChanged: (value) => viewModel.setTelefone(value ?? ''),
-        ),
-        RegisterFormInput(
-          name: 'email',
-          label: 'Email',
-          keyboardType: TextInputType.emailAddress,
-          validator: FormBuilderValidators.email(),
-          onChanged: (value) => viewModel.setEmail(value ?? ''),
-        ),
-        RegisterFormInput(
+          RegisterFormInput(
+            name: 'nome',
+            label: 'Nome do Comercio',
+            onChanged: (value) => viewModel.setNome(value ?? ''),
+          ),
+           RegisterFormDropdown(
+            validator: (value){
+              if (value == null || value.isEmpty) {
+                return 'Por favor, selecione uma categoria';
+              }
+              return null;
+            }
+          ),
+          RegisterFormInput(
+            name: 'telefone',
+            label: 'Telefone',
+            keyboardType: TextInputType.phone,
+            onChanged: (value) => viewModel.setTelefone(value ?? ''),
+            validator: FormBuilderValidators.phoneNumber(checkNullOrEmpty: true)
+          ),
+          RegisterFormInput(
+            name: 'email',
+            label: 'Email',
+            keyboardType: TextInputType.emailAddress,
+            validator: FormBuilderValidators.email(),
+            onChanged: (value) => viewModel.setEmail(value ?? ''),
+          ),
+          RegisterFormInput(
             name: 'senha',
             label: 'Senha',
             obscureText: true,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(),
-              FormBuilderValidators.minLength(8),
+              FormBuilderValidators.minLength(4),
             ]),
-            onChanged: (value) => viewModel.setSenha(value ?? '')
-        ),
-        RegisterFormInput(
-          name: 'confirmar',
-          label: 'Confirmar Senha',
-          obscureText: true,
-          validator: (value){
-            if(value != viewModel.senha){
-              return 'As senhas não coincidem';
-            }
-            return null;
-          },
-        ),
-        Column(
-          spacing: 20,
-          children: [
-            GestureDetector(
-              onTap: () {
-                print('Texto clicado');
-              },
-              child: Text(
-                'Esqueceu a senha?',
-                style: GoogleFonts.kaiseiDecol(
-                  textStyle: const TextStyle(
-                    color: AppColors.White1,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
+            onChanged: (value) => viewModel.setSenha(value ?? ''),
+          ),
+          RegisterFormInput(
+            name: 'confirmar',
+            label: 'Confirmar Senha',
+            obscureText: true,
+            validator: (value) {
+              if (value != viewModel.senha) {
+                return 'As senhas não coincidem';
+              }
+              return null;
+            },
+          ),
+          Column(
+            spacing: 20,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  print('Texto clicado');
+                },
+                child: Text(
+                  'Esqueceu a senha?',
+                  style: GoogleFonts.kaiseiDecol(
+                    textStyle: const TextStyle(
+                      color: AppColors.White1,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),
-            ),
-            WidgetButton(
-                text: status == CreationStatus.loading ? 'Aguarde...' : 'Avançar',
-              onPressed: status == CreationStatus.loading ? null : () {
-                if (_formKey.currentState!.validate()) {
-                  print('Dados a serem enviados:');
-                  print('Nome: ${viewModel.nome}');
-                  print('Categoria: ${viewModel.categoria}');
-                  print('Email: ${viewModel.email}');
-                  viewModel.createRegister();
-                }
-              },
-            ),
-
-            if (status == CreationStatus.error)
-              Padding(
-                padding: const EdgeInsets.only(top: 10),
-                child: Text(
-                  viewModel.errorMessage ?? 'Erro desconhecido.',
-                  style: const TextStyle(color: Colors.red),
-                ),
+              WidgetButton(
+                text: status == CreationStatus.loading
+                    ? 'Aguarde...'
+                    : 'Avançar',
+                onPressed: status == CreationStatus.loading
+                    ? null
+                    : () {
+                        if (formKey.currentState?.validate() ?? false) {
+                          print('Dados a serem enviados:');
+                          print('Nome: ${viewModel.nome}');
+                          print('Categoria: ${viewModel.categoria}');
+                          print('Email: ${viewModel.email}');
+                          viewModel.createRegister();
+                        }
+                      },
               ),
-          ],
-        ),
-      ],
+
+              if (status == CreationStatus.error)
+                Padding(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: Text(
+                    viewModel.errorMessage ?? 'Erro desconhecido.',
+                    style: const TextStyle(color: Colors.red),
+                  ),
+                ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
