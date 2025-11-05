@@ -24,7 +24,7 @@ class RegisterScreen extends StatelessWidget {
             children: [
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 40.0, bottom: 0.0),
+                  padding: const EdgeInsets.only(top: 30.0),
                   child: Image.asset(
                     'assets/Logo.png',
                     width: 200,

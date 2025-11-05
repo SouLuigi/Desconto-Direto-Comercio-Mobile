@@ -21,7 +21,7 @@ class RegisterForm extends StatelessWidget {
     return FormBuilder(
       key: formKey,
       child: Column(
-        spacing: 15,
+        spacing: 10,
         children: [
           Text(
             'Cadastro',
@@ -37,22 +37,25 @@ class RegisterForm extends StatelessWidget {
           RegisterFormInput(
             name: 'nome',
             label: 'Nome do Comercio',
-            onChanged: (value) => viewModel.setNome(value ?? ''),
+            onChanged: (value) => viewModel.setNome(value ??  ''),
           ),
-           RegisterFormDropdown(
-            validator: (value){
+          RegisterFormDropdown(
+            validator: (value) {
               if (value == null || value.isEmpty) {
                 return 'Por favor, selecione uma categoria';
               }
               return null;
-            }
+            },
+            onChanged: (value) => viewModel.setCategoria(value ?? ''),
           ),
           RegisterFormInput(
             name: 'telefone',
             label: 'Telefone',
             keyboardType: TextInputType.phone,
             onChanged: (value) => viewModel.setTelefone(value ?? ''),
-            validator: FormBuilderValidators.phoneNumber(checkNullOrEmpty: true)
+            validator: FormBuilderValidators.phoneNumber(
+              checkNullOrEmpty: true,
+            ),
           ),
           RegisterFormInput(
             name: 'email',
@@ -82,24 +85,10 @@ class RegisterForm extends StatelessWidget {
               return null;
             },
           ),
+          const SizedBox(height: 0),
           Column(
-            spacing: 20,
+            spacing: 10,
             children: [
-              GestureDetector(
-                onTap: () {
-                  print('Texto clicado');
-                },
-                child: Text(
-                  'Esqueceu a senha?',
-                  style: GoogleFonts.kaiseiDecol(
-                    textStyle: const TextStyle(
-                      color: AppColors.White1,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
-              ),
               WidgetButton(
                 text: status == CreationStatus.loading
                     ? 'Aguarde...'
@@ -107,16 +96,12 @@ class RegisterForm extends StatelessWidget {
                 onPressed: status == CreationStatus.loading
                     ? null
                     : () {
-                        if (formKey.currentState?.validate() ?? false) {
-                          print('Dados a serem enviados:');
-                          print('Nome: ${viewModel.nome}');
-                          print('Categoria: ${viewModel.categoria}');
-                          print('Email: ${viewModel.email}');
-                          viewModel.createRegister();
-                        }
-                      },
+                  if (formKey.currentState?.validate() ?? false) {
+                    viewModel.createRegister();
+                  }
+                },
               ),
-
+              WidgetButton(text: 'Voltar', onPressed: () {}),
               if (status == CreationStatus.error)
                 Padding(
                   padding: const EdgeInsets.only(top: 10),

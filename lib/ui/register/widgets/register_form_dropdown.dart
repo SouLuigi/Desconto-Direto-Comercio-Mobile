@@ -1,5 +1,4 @@
 import 'package:desconto_direto_comercio_mobile/ui/register/view_models/register_viewmodel.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,17 +7,13 @@ import '../../core/themes/colors.dart';
 class RegisterFormDropdown extends StatelessWidget {
   final String? Function(String?)? validator;
   final void Function(String?)? onChanged;
-  const RegisterFormDropdown({
-    super.key,
-    this.validator,
-    this.onChanged,
-  });
+
+  const RegisterFormDropdown({super.key, this.validator, this.onChanged});
 
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<RegisterViewModel>();
     return SizedBox(
-      height: 55,
       child: DropdownButtonFormField<String>(
         hint: const Text(
           'Selecione a Categoria',
@@ -56,16 +51,7 @@ class RegisterFormDropdown extends StatelessWidget {
           );
         }).toList(),
         onChanged: onChanged,
-        // onChanged: (String? newValue) {
-        //   viewModel.setCategoria(newValue!);
-        // },
         validator: validator,
-        // validator: (value) {
-        //   if (value == null || value.isEmpty) {
-        //     return 'Por favor, selecione uma categoria';
-        //   }
-        //   return null;
-        // },
       ),
     );
   }
