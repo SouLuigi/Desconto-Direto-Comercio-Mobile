@@ -2,14 +2,14 @@
 import 'package:flutter/foundation.dart';
 
 // Project imports:
-import 'package:desconto_direto_comercio_mobile/data/services/commerce_add_service.dart';
-import '../../../data/model/commerce_add_model.dart';
+import '../../../data/services/register_service.dart';
+import '../../../data/model/register_model.dart';
 import '../../../data/model/commerce_model.dart';
 
 enum CreationStatus { idle, loading, success, error }
 
 class RegisterViewModel extends ChangeNotifier {
-  final CommerceAddService? _service;
+  final RegisterService? _service;
 
   String _nome = '';
   String _categoria = '';
@@ -108,7 +108,7 @@ class RegisterViewModel extends ChangeNotifier {
     _errorMessage = null;
     notifyListeners();
     try {
-      final data = CommerceAddModel(
+      final data = RegisterModel(
         nome: _nome,
         categoria: _categoria,
         telefone: _telefone,

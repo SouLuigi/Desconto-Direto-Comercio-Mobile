@@ -3,16 +3,16 @@
 // Package imports:
 
 // Project imports:
-import '../model/commerce_add_model.dart';
+import '../model/register_model.dart';
 import '../model/commerce_model.dart';
-import '../repositories/commerce_add_repository.dart';
+import '../repositories/register_repository.dart';
 
-class CommerceAddService {
-  final CommerceAddRepository _repository;
+class RegisterService {
+  final RegisterRepository _repository;
 
-  CommerceAddService(this._repository);
+  RegisterService(this._repository);
 
-  Future<CommerceModel> createCommerce(CommerceAddModel data) async {
+  Future<CommerceModel> createCommerce(RegisterModel data) async {
     // 1. **(Regra de Negócio Aqui)** Ex: if (data.name == null) throw Exception('Nome obrigatório');
 
     try {

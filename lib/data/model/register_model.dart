@@ -1,11 +1,11 @@
-class CommerceAddModel {
+class RegisterModel {
   final String nome;
   final String categoria;
   final String telefone;
   final String email;
   final String senha;
 
-  CommerceAddModel({
+  RegisterModel({
     required this.nome,
     required this.categoria,
     required this.telefone,

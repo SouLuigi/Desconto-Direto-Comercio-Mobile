@@ -5,13 +5,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 // Project imports:
-import '../model/commerce_add_model.dart';
+import '../model/register_model.dart';
 
-class CommerceAddRepository {
+class RegisterRepository {
   final String _baseUrl = 'http://192.168.0.104:8080';
 
   Future<Map<String, dynamic>> sendCreationRequest(
-    CommerceAddModel data,
+    RegisterModel data,
   ) async {
     final uri = Uri.parse('$_baseUrl/comercios/add');
     final response = await http.post(
