@@ -14,6 +14,7 @@ class RegisterFormDropdown extends StatelessWidget {
   Widget build(BuildContext context) {
     final viewModel = context.watch<RegisterViewModel>();
     return SizedBox(
+      height: 53,
       child: DropdownButtonFormField<String>(
         hint: const Text(
           'Selecione a Categoria',
