@@ -2,6 +2,7 @@ import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -101,7 +102,9 @@ class RegisterForm extends StatelessWidget {
                   }
                 },
               ),
-              WidgetButton(text: 'Voltar', onPressed: () {}),
+              WidgetButton(text: 'Voltar', onPressed: () {
+                context.pop();
+              }),
               if (status == CreationStatus.error)
                 Padding(
                   padding: const EdgeInsets.only(top: 10),

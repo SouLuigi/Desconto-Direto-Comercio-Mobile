@@ -2,8 +2,10 @@ import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_button.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../routing/routes.dart';
 import '../../core/themes/colors.dart';
 import 'auth_form_input.dart';
 
@@ -59,7 +61,12 @@ class AuthForm extends StatelessWidget {
                 ),
               ),
               WidgetButton(text: 'Entrar', onPressed: () {}),
-              WidgetButton(text: 'Cadastrar', onPressed: () {}),
+              WidgetButton(
+                text: 'Cadastrar',
+                onPressed: () {
+                  context.push(Routes.register);
+                },
+              ),
             ],
           ),
         ],
