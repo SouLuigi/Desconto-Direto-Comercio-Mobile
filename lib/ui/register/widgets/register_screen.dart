@@ -1,9 +1,9 @@
 // Flutter imports:
 
-import '../../../data/services/register_service.dart';
+import '../../../data/services/commerce_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../data/repositories/register_repository.dart';
+import '../../../data/repositories/commerce_repository.dart';
 import '../../core/themes/colors.dart';
 import '../view_models/register_viewmodel.dart';
 import 'register_form.dart';

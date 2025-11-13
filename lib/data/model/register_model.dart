@@ -12,7 +12,16 @@ class RegisterModel {
     required this.email,
     required this.senha,
   });
-
+  
+  factory RegisterModel.fromJson(Map<String, dynamic> json) {
+    return RegisterModel(
+      nome: json['nome'],
+      categoria: json['categoria'],
+      telefone: json['telefone'],
+      email: json['email'],
+      senha: json['senha'],
+    );
+  }
   Map<String, dynamic> toJson() {
     return {
       'nome': nome,

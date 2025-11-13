@@ -2,15 +2,19 @@
 import 'dart:convert';
 
 // Package imports:
+import 'package:desconto_direto_comercio_mobile/config/api_config.dart';
+import 'package:desconto_direto_comercio_mobile/data/model/commerce_model.dart';
 import 'package:http/http.dart' as http;
 
 // Project imports:
 import '../model/register_model.dart';
 
 class RegisterRepository {
-  final String _baseUrl = 'http://192.168.0.104:8080';
+  final String _baseUrl = ApiConfig.baseUrl;
 
-  Future<Map<String, dynamic>> sendCreationRequest(
+
+
+  Future<Commerce> createCommerce(
     RegisterModel data,
   ) async {
     final uri = Uri.parse('$_baseUrl/comercios/add');

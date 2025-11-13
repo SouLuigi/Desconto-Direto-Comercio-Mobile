@@ -1,23 +1,91 @@
-class CommerceModel{
+import 'package:desconto_direto_comercio_mobile/data/model/flyer_model.dart';
+import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
+
+class Commerce {
   final int id;
   final String nome;
   final String categoria;
-  final String telefone;
+  final String? telefone;
   final String email;
+  final String senha;
+  final String? dataPostagem;
+  final String? telefoneCelular;
+  final String? instagram;
+  final String? bairro;
+  final String? cep;
+  final bool? fazEntrega;
+  final DateTime? horarioAbertura;
+  final DateTime? horarioFechamento;
+  final bool? aberto;
+  final String? fotoUrl;
+  final Offer? offer;
+  final Flyer? flyer;
 
-  CommerceModel({
+  Commerce({
     required this.id,
     required this.nome,
     required this.categoria,
-    required this.telefone,
+    this.telefone,
     required this.email,
-});  factory CommerceModel.fromJson(Map<String, dynamic> json){
-    return CommerceModel(
+    required this.senha,
+    this.dataPostagem,
+    this.telefoneCelular,
+    this.instagram,
+    this.bairro,
+    this.cep,
+    this.fazEntrega,
+    this.horarioAbertura,
+    this.horarioFechamento,
+    this.aberto,
+    this.fotoUrl,
+    this.offer,
+    this.flyer,
+  });
+
+  factory Commerce.fromJson(Map<String, dynamic> json) {
+    return Commerce(
       id: json['id'] as int,
       nome: json['nome'] as String,
       categoria: json['categoria'] as String,
       telefone: json['telefone'] as String,
       email: json['email'] as String,
+      senha: json['senha'] as String,
+      telefoneCelular: json['telefoneCelular'] as String?,
+      instagram: json['instagram'] as String?,
+      bairro: json['bairro'] as String?,
+      cep: json['cep'] as String?,
+      fazEntrega: json['fazEntrega'] as bool?,
+      horarioAbertura: json['horarioAbertura'] != null
+          ? DateTime.parse(json['horarioAbertura'])
+          : null,
+      horarioFechamento: json['horarioFechamento'] != null
+          ? DateTime.parse(json['horarioFechamento'])
+          : null,
+      aberto: json['aberto'] as bool?,
+      fotoUrl: json['fotoUrl'] as String?,
+      offer: json['offer'] != null ? Offer.fromJson(json['offer']) : null,
+      flyer: json['flyer'] != null ? Flyer.fromJson(json['flyer']) : null,
     );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      'nome': nome,
+      'categoria': categoria,
+      'telefone': telefone,
+      'email': email,
+      'senha': senha,
+      'dataPostagem': dataPostagem,
+      'telefoneCelular': telefoneCelular,
+      'instagram': instagram,
+      'bairro': bairro,
+      'cep': cep,
+      'fazEntrega': fazEntrega,
+      'horarioAbertura': horarioAbertura?.toIso8601String(),
+      'horarioFechamento': horarioFechamento?.toIso8601String(),
+      'aberto': aberto,
+      'fotoUrl': fotoUrl,
+      'offer': offer?.toJson(),
+      'flyer': flyer?.toJson(),
+    };
   }
 }
