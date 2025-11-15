@@ -1,3 +1,4 @@
+import 'package:desconto_direto_comercio_mobile/data/model/login_model.dart';
 
 import '../model/register_model.dart';
 import '../model/commerce_model.dart';
@@ -17,8 +18,25 @@ class RegisterService {
       throw Exception('Dados inválidos para registro.');
     }
     try {
-      final jsonResponse = await _repository.createCommerce(data);
+      final jsonResponse = await _repository.create(data);
       return jsonResponse;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<Commerce> login(LoginModel data) async {
+    if (data.email.isEmpty || data.senha.isEmpty) {
+      throw Exception('E-mail e senha são obrigatórios.');
+    }
+    try {
+      final List<Commerce> allCommerces = await _repository.getAll();
+      final commerceLogin = allCommerces.firstWhere(
+        (commerce) =>
+            commerce.email == data.email && commerce.senha == data.senha,
+        orElse: () => throw Exception("Email ou senhas incorretos!"),
+      );
+      return commerceLogin;
     } catch (e) {
       rethrow;
     }
