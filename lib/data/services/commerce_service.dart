@@ -9,9 +9,10 @@ class RegisterService {
   RegisterService(this._repository);
 
   Future<Commerce> createCommerce(RegisterModel data) async {
+    final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
     if (data.nome.isEmpty ||
         data.email.isEmpty ||
-        !data.email.contains('@') ||
+        !emailRegex.hasMatch(data.email) ||
         data.senha.isEmpty) {
       throw Exception('Dados inválidos para registro.');
     }
@@ -19,9 +20,7 @@ class RegisterService {
       final jsonResponse = await _repository.createCommerce(data);
       return jsonResponse;
     } catch (e) {
-      throw Exception(
-        'Falha completa ao cadastrar o comércio. Tente novamente. Detalhes: $e',
-      );
+      rethrow;
     }
   }
 }

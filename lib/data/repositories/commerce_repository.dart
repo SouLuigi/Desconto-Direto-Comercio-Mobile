@@ -12,11 +12,7 @@ import '../model/register_model.dart';
 class RegisterRepository {
   final String _baseUrl = ApiConfig.baseUrl;
 
-
-
-  Future<Commerce> createCommerce(
-    RegisterModel data,
-  ) async {
+  Future<Commerce> createCommerce(RegisterModel data) async {
     final uri = Uri.parse('$_baseUrl/comercios/add');
     final response = await http.post(
       uri,
@@ -26,7 +22,9 @@ class RegisterRepository {
       body: jsonEncode(data.toJson()),
     );
     if (response.statusCode == 201 || response.statusCode == 200) {
-      return jsonDecode(response.body);
+      final Map<String, dynamic> json = jsonDecode(response.body);
+
+      return Commerce.fromJson(json);
     } else {
       final errorBody = jsonDecode(response.body);
       throw Exception(
