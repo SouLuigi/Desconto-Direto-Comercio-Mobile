@@ -10,14 +10,6 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.Blue1,
-          leading: IconButton(
-            icon: Icon(Icons.account_circle_outlined, color: AppColors.Yellow1),
-            onPressed: () {},
-            tooltip: 'Perfil',
-          ),
-        ),
         body: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
