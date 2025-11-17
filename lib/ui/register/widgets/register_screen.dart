@@ -1,9 +1,9 @@
 // Flutter imports:
 
-import '../../../data/services/register_service.dart';
+import '../../../data/services/commerce_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../data/repositories/register_repository.dart';
+import '../../../data/repositories/commerce_repository.dart';
 import '../../core/themes/colors.dart';
 import '../view_models/register_viewmodel.dart';
 import 'register_form.dart';
@@ -13,12 +13,12 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final repository = RegisterRepository();
+    final repository = CommerceRepository();
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.Blue1,
         body: ChangeNotifierProvider(
-          create: (_) => RegisterViewModel(RegisterService(repository)),
+          create: (_) => RegisterViewModel(CommerceService(repository)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

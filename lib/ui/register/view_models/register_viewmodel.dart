@@ -2,14 +2,14 @@
 import 'package:flutter/foundation.dart';
 
 // Project imports:
-import '../../../data/services/register_service.dart';
+import '../../../data/services/commerce_service.dart';
 import '../../../data/model/register_model.dart';
 import '../../../data/model/commerce_model.dart';
 
 enum CreationStatus { idle, loading, success, error }
 
 class RegisterViewModel extends ChangeNotifier {
-  final RegisterService? _service;
+  final CommerceService? _service;
 
   String _nome = '';
   String _categoria = '';
@@ -41,7 +41,7 @@ class RegisterViewModel extends ChangeNotifier {
   ];
   CreationStatus _status = CreationStatus.idle;
   String? _errorMessage;
-  CommerceModel? _creationRegister;
+  Commerce? _creationRegister;
 
   RegisterViewModel([this._service]);
 
@@ -63,7 +63,7 @@ class RegisterViewModel extends ChangeNotifier {
 
   String? get errorMessage => _errorMessage;
 
-  CommerceModel? get creationRegister => _creationRegister;
+  Commerce? get creationRegister => _creationRegister;
 
   void setNome(String value) {
     _nome = value;
