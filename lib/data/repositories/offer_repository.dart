@@ -4,7 +4,7 @@ import 'package:desconto_direto_comercio_mobile/config/api_config.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
 import 'package:http/http.dart' as http;
 
-class OfferRegister {
+class OfferRepository {
   final String _baseUrl = ApiConfig.baseUrl;
 
   Future<List<Offer>> getAll() async {

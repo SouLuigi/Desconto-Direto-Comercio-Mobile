@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:convert';
+import 'dart:io';
 
 // Package imports:
 import 'package:desconto_direto_comercio_mobile/config/api_config.dart';
@@ -9,7 +10,7 @@ import 'package:http/http.dart' as http;
 // Project imports:
 import '../model/register_model.dart';
 
-class RegisterRepository {
+class CommerceRepository {
   final String _baseUrl = ApiConfig.baseUrl;
 
   Future<Commerce> create(RegisterModel data) async {
@@ -90,9 +91,7 @@ class RegisterRepository {
 
   Future<void> delete(int id) async {
     final uri = Uri.parse('$_baseUrl/comercios/delete/$id');
-    final response = await http.delete(
-      uri,
-    );
+    final response = await http.delete(uri);
     if (response.statusCode == 200 || response.statusCode == 204) {
       return;
     } else {
@@ -100,25 +99,24 @@ class RegisterRepository {
       throw Exception('Erro de API [DELETE]: ${errorBody['message']}');
     }
   }
+
+  Future<void> uploadImage(int id, File image) async {
+    final _baseUrl = ApiConfig.baseUrl;
+    final uri = Uri.parse('$_baseUrl/comercios/upload-foto-comercio/$id');
+    final request = http.MultipartRequest('POST', uri);
+    final fileMultipart = await http.MultipartFile.fromPath('file', image.path);
+    request.files.add(fileMultipart);
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("Upload realizado com sucesso!");
+    } else {
+      throw Exception(
+        'Erro no upload: ${response.statusCode} - ${response.body}',
+      );
+    }
+  }
 }
 
-// Aqui vamos deixar mais pro final pq eu preciso saber o tipo de dado que o flutter aceita
-// Future<Commerce> uploadImage (int id, Tipo? data) async {
-//   final uri = Uri.parse('$_baseUrl/comercios/upload-foto-comercio/$id');
-//   final response = await http.post(
-//     uri,
-//     headers: <String, String>{
-//       'Content-Type': 'application/json; charset=UTF-8',
-//     },
-//    body: jsonEncode(data.toJson()),
-//   );
-//   if (response.statusCode == 201 || response.statusCode == 200) {
-//     final Map<String, dynamic> json = jsonDecode(response.body);
-//     return Commerce.fromJson(json);
-//   } else {
-//     final errorBody = jsonDecode(response.body);
-//     throw Exception(
-//       'Erro de API. Status: ${response.statusCode}. Mensagem: ${errorBody['message']}',
-//     );
-//   }
-// }
+

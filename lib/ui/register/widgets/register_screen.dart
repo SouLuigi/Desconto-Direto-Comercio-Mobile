@@ -13,12 +13,12 @@ class RegisterScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final repository = RegisterRepository();
+    final repository = CommerceRepository();
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.Blue1,
         body: ChangeNotifierProvider(
-          create: (_) => RegisterViewModel(RegisterService(repository)),
+          create: (_) => RegisterViewModel(CommerceService(repository)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [

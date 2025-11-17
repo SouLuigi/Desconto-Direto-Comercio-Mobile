@@ -1,5 +1,6 @@
 // Dart imports:
 import 'dart:convert';
+import 'dart:io';
 
 // Package imports:
 import 'package:desconto_direto_comercio_mobile/config/api_config.dart';
@@ -87,9 +88,7 @@ class ProductRepository {
 
   Future<void> delete(int id) async {
     final uri = Uri.parse('$_baseUrl/produtos/delete/$id');
-    final response = await http.delete(
-      uri,
-    );
+    final response = await http.delete(uri);
     if (response.statusCode == 200 || response.statusCode == 204) {
       return;
     } else {
@@ -97,9 +96,22 @@ class ProductRepository {
       throw Exception('Erro de API [DELETE]: ${errorBody['message']}');
     }
   }
-}
 
-// Aqui vamos deixar mais pro final pq eu preciso saber o tipo de dado que o flutter aceita
-// Future<Product> uploadImage (int id, Tipo? data) async {
-//
-// }
+  Future<void> uploadImage(int id, File image) async {
+    final baseUrl = ApiConfig.baseUrl;
+    final uri = Uri.parse('$baseUrl/produtos/upload-foto-produto/$id');
+    final request = http.MultipartRequest('POST', uri);
+    final fileMultipart = await http.MultipartFile.fromPath('file', image.path);
+    request.files.add(fileMultipart);
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200 || response.statusCode == 201) {
+      print("Upload realizado com sucesso!");
+    } else {
+      throw Exception(
+        'Erro no upload: ${response.statusCode} - ${response.body}',
+      );
+    }
+  }
+}

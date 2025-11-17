@@ -9,7 +9,7 @@ import '../../../data/model/commerce_model.dart';
 enum CreationStatus { idle, loading, success, error }
 
 class RegisterViewModel extends ChangeNotifier {
-  final RegisterService? _service;
+  final CommerceService? _service;
 
   String _nome = '';
   String _categoria = '';

@@ -7,6 +7,7 @@ class Offer {
   final int comercioId;
   final int likes;
   final Product product;
+  final double preco;
 
   Offer({
     required this.id,
@@ -15,6 +16,7 @@ class Offer {
     required this.comercioId,
     required this.likes,
     required this.product,
+    required this.preco
   });
 
   factory Offer.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class Offer {
       comercioId: json['comercioId'] as int,
       likes: json['likes'] as int,
       product: Product.fromJson(json['product'] as Map<String, dynamic>),
+      preco: (json['preco'] as num).toDouble(),
     );
   }
 
@@ -36,6 +39,7 @@ class Offer {
       'comercioId': comercioId,
       'likes': likes,
       'product': product.toJson(),
+      'preco': preco
     };
   }
 }
