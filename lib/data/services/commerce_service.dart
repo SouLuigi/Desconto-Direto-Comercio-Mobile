@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:desconto_direto_comercio_mobile/data/model/flyer_model.dart';
-import 'package:desconto_direto_comercio_mobile/data/model/login_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
+import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
 
 import '../model/commerce_model.dart';
 import '../model/register_model.dart';
@@ -10,8 +10,9 @@ import '../repositories/commerce_repository.dart';
 
 class CommerceService {
   final CommerceRepository _repository;
+  final LocalStorageService _localStorage;
 
-  CommerceService(this._repository);
+  CommerceService(this._repository, this._localStorage);
 
   Future<Commerce> createCommerce(RegisterModel data) async {
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
@@ -29,21 +30,21 @@ class CommerceService {
     }
   }
 
-  Future<Commerce> login(LoginModel data) async {
-    if (data.email.isEmpty || data.senha.isEmpty) {
+  Future<Commerce> login(String email, String password) async {
+    if (email.isEmpty || password.isEmpty) {
       throw Exception('E-mail e senha são obrigatórios.');
     }
     try {
-      final List<Commerce> allCommerces = await _repository.getAll();
-      final commerceLogin = allCommerces.firstWhere(
-        (commerce) =>
-            commerce.email == data.email && commerce.senha == data.senha,
-        orElse: () => throw Exception("Email ou senhas incorretos!"),
-      );
-      return commerceLogin;
+      final commerce = await _repository.login(email, password);
+      await _localStorage.saveToken(commerce.id.toString());
+      return commerce;
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<void> logout() async {
+    await _localStorage.deleteToken();
   }
 
   Future<List<Commerce>> getAllCommerces() async {
@@ -109,3 +110,4 @@ class CommerceService {
     }
   }
 }
+

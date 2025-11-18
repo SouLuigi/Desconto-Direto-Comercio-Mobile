@@ -1,5 +1,7 @@
 // Flutter imports:
 
+import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
+
 import '../../../data/services/commerce_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -14,11 +16,12 @@ class RegisterScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final repository = CommerceRepository();
+    final localStorage = LocalStorageService();
     return SafeArea(
       child: Scaffold(
         backgroundColor: AppColors.Blue1,
         body: ChangeNotifierProvider(
-          create: (_) => RegisterViewModel(CommerceService(repository)),
+          create: (_) => RegisterViewModel(CommerceService(repository, localStorage)),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
