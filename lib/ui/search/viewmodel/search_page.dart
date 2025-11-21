@@ -16,6 +16,8 @@ class _SearchPageState extends State<SearchPage> {
   List<String> resultados = [];
 
   Future<void> buscar() async {
+    if (searchText.text.isEmpty) return;
+
     setState(() => loading = true);
 
     resultados = await controller.buscarProdutos(searchText.text);

@@ -22,12 +22,14 @@ class _FlyersPageState extends State<FlyersPage> {
   }
 
   Future<void> loadData() async {
-    final data = await controller.loadFlyers();
+    final data = await controller.buscarFlyers();
+
     setState(() {
       flyers = data;
       loading = false;
     });
   }
+
 
   @override
   Widget build(BuildContext context) {
