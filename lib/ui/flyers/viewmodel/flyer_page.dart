@@ -76,14 +76,100 @@ class _FlyersPageState extends State<FlyersPage> {
                   childAspectRatio: 0.70,
                 ),
                 itemCount: flyers.length,
-                itemBuilder: (context, i) {
-                  return FlyerItemWidget(imageUrl: flyers[i]);
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      _abrirModalFlyer(flyers[index]);
+                    },
+                    child: FlyerItemWidget(imageUrl: flyers[index]),
+                  );
                 },
               ),
             ),
           ],
         ),
       ),
+    );
+  }
+
+  void _abrirModalFlyer(String imageUrl) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) {
+        return Container(
+          height: MediaQuery.of(context).size.height * 0.95,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(25),
+              topRight: Radius.circular(25),
+            ),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+
+              // Panfleto destacado
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Image.network(imageUrl, fit: BoxFit.contain),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              // Botão Excluir
+              Container(
+                width: double.infinity,
+                margin: const EdgeInsets.symmetric(horizontal: 20),
+                child: ElevatedButton(
+                  onPressed: () {
+                    // Implementar exclusão
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+                  child: const Text(
+                    "Excluir",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              // Botão Fechar
+              GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 20),
+                  child: const Text(
+                    "Fechar",
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 
