@@ -67,7 +67,7 @@ class OfferRepository {
     }
   }
 
-  Future<Offer> getById(int id) async {
+  Future<Offer> getById(String id) async {
     final uri = Uri.parse('$_baseUrl/ofertas/find/$id');
     final response = await http.get(
       uri,
@@ -126,7 +126,7 @@ class OfferRepository {
     }
   }
 
-  Future<void> delete(int id) async {
+  Future<void> delete(String id) async {
     final uri = Uri.parse('$_baseUrl/ofertas/delete/$id');
     final response = await http.delete(
       uri,

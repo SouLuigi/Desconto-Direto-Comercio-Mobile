@@ -35,7 +35,7 @@ class ProductService {
     }
   }
 
-  Future<Product> getProductById(int id) async {
+  Future<Product> getProductById(String id) async {
     try {
       final jsonResponse = await _repository.getById(id);
       return jsonResponse;
@@ -45,7 +45,7 @@ class ProductService {
   }
 
 
-  Future<bool> uploadImageOfFlyer(int id, File image) async {
+  Future<bool> uploadImageOfFlyer(String id, File image) async {
     try {
       await _repository.uploadImage(id, image);
       return true;
