@@ -5,7 +5,6 @@ import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_sto
 import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
 import 'package:desconto_direto_comercio_mobile/ui/home/widgets/home_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
@@ -179,7 +178,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
           children: <Widget>[
             _buildDrawerHeader(),
             ListTile(
-              leading: Icon(Symbols.add_notes, color: Colors.white),
+              leading: Icon(Icons.note_add
+                  , color: Colors.white),
               title: Text(
                 "Adicionar panfleto",
                 style: TextStyle(color: Colors.white),
@@ -190,7 +190,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Symbols.new_label, color: Colors.white),
+              leading: Icon(Icons.new_label, color: Colors.white),
               title: Text(
                 "Adicionar oferta",
                 style: TextStyle(color: Colors.white),
@@ -200,7 +200,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Symbols.add_shopping_cart, color: Colors.white),
+              leading: Icon(Icons.add_shopping_cart, color: Colors.white),
               title: Text(
                 "Adicionar produto",
                 style: TextStyle(color: Colors.white),

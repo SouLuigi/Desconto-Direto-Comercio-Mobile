@@ -69,17 +69,17 @@ class _FlyerCreatePageState extends State<FlyerCreatePage> {
     setState(() => loading = true);
 
     try {
-      // 1️⃣ Criar flyer com dados obrigatórios
+
       final flyer = Flyer(
         id: 0,
-        fotoUrl: "temp", // necessário pois o service exige não vazio
+        fotoUrl: "temp",
         dataExpiracao: dataExpiracao!,
         comercioId: comercioId,
       );
 
       final criado = await flyerService.createNewFlyer(flyer);
 
-      // 2️⃣ Fazer upload da imagem
+
       final ok = await flyerService.uploadImageOfFlyer(
         criado.id,
         imagemSelecionada!,
