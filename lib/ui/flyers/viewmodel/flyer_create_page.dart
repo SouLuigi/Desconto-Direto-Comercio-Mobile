@@ -1,63 +1,49 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'flyers_create_controller.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:desconto_direto_comercio_mobile/data/model/flyer_model.dart';
+import 'package:desconto_direto_comercio_mobile/data/repositories/flyer_repository.dart';
+import '../../../data/services/flyer_service.dart';
 
-class FlyersCreatePage extends StatefulWidget {
-  const FlyersCreatePage({super.key});
+class FlyerCreatePage extends StatefulWidget {
+  const FlyerCreatePage({super.key});
 
   @override
-  State<FlyersCreatePage> createState() => _FlyersCreatePageState();
+  State<FlyerCreatePage> createState() => _FlyerCreatePageState();
 }
 
-class _FlyersCreatePageState extends State<FlyersCreatePage> {
-  final controller = FlyersCreateController();
+class _FlyerCreatePageState extends State<FlyerCreatePage> {
+  late final FlyerService flyerService;
+
+  _FlyerCreatePageState() {
+    flyerService = FlyerService(FlyerRepository());
+  }
 
   File? imagemSelecionada;
+  DateTime? dataExpiracao;
 
-  final TextEditingController postagemCtrl = TextEditingController();
-  final TextEditingController vencimentoCtrl = TextEditingController();
+  final TextEditingController dataExpiracaoCtrl = TextEditingController();
 
-  final ImagePicker picker = ImagePicker();
+  bool loading = false;
+
+  // TODO - depois pegue do login
+  final int comercioId = 1;
 
   Future<void> selecionarImagem() async {
-    final XFile? img = await picker.pickImage(source: ImageSource.gallery);
-
-    if (img != null) {
-      setState(() => imagemSelecionada = File(img.path));
-    }
-  }
-
-  Future<void> salvar() async {
-    if (imagemSelecionada == null ||
-        postagemCtrl.text.isEmpty ||
-        vencimentoCtrl.text.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Preencha todos os campos!")),
-      );
-      return;
-    }
-
-    final sucesso = await controller.cadastrarFlyer(
-      imagem: imagemSelecionada!,
-      dataPostagem: postagemCtrl.text,
-      dataVencimento: vencimentoCtrl.text,
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      allowedExtensions: ["jpg", "jpeg", "png"],
     );
 
-    if (sucesso) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Panfleto cadastrado com sucesso!")),
-      );
-      Navigator.pop(context);
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Erro ao cadastrar panfleto")),
-      );
+    if (result != null && result.files.single.path != null) {
+      setState(() {
+        imagemSelecionada = File(result.files.single.path!);
+      });
     }
   }
 
-  Future<void> selecionarData(TextEditingController controller) async {
-    DateTime? data = await showDatePicker(
+  Future<void> selecionarData() async {
+    final data = await showDatePicker(
       context: context,
       firstDate: DateTime(2020),
       lastDate: DateTime(2050),
@@ -65,8 +51,55 @@ class _FlyersCreatePageState extends State<FlyersCreatePage> {
     );
 
     if (data != null) {
-      controller.text = "${data.month}/${data.day}/${data.year}";
+      setState(() {
+        dataExpiracao = data;
+        dataExpiracaoCtrl.text = "${data.day}/${data.month}/${data.year}";
+      });
     }
+  }
+
+  Future<void> salvar() async {
+    if (imagemSelecionada == null || dataExpiracao == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Preencha todos os campos!")),
+      );
+      return;
+    }
+
+    setState(() => loading = true);
+
+    try {
+      // 1️⃣ Criar flyer com dados obrigatórios
+      final flyer = Flyer(
+        id: 0,
+        fotoUrl: "temp", // necessário pois o service exige não vazio
+        dataExpiracao: dataExpiracao!,
+        comercioId: comercioId,
+      );
+
+      final criado = await flyerService.createNewFlyer(flyer);
+
+      // 2️⃣ Fazer upload da imagem
+      final ok = await flyerService.uploadImageOfFlyer(
+        criado.id,
+        imagemSelecionada!,
+      );
+
+      if (ok) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Panfleto cadastrado com sucesso!")),
+        );
+        Navigator.pop(context);
+      } else {
+        throw Exception("Erro ao enviar imagem");
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro: $e")),
+      );
+    }
+
+    setState(() => loading = false);
   }
 
   @override
@@ -75,36 +108,41 @@ class _FlyersCreatePageState extends State<FlyersCreatePage> {
       backgroundColor: Colors.white,
 
       appBar: AppBar(
+        title: const Text("Cadastro de Panfleto"),
         backgroundColor: const Color(0xFF003A57),
-        elevation: 0,
-        title: const Text("Tela Cadastro Panfleto"),
       ),
 
-      body: SingleChildScrollView(
+      body: loading
+          ? const Center(child: CircularProgressIndicator())
+          : SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
           children: [
+            // 📌 área da imagem
             GestureDetector(
               onTap: selecionarImagem,
               child: Container(
-                height: 260,
+                height: 250,
                 width: double.infinity,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.orange),
+                  border: Border.all(color: Colors.orange, width: 2),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: imagemSelecionada == null
                     ? Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: const [
-                    Icon(Icons.camera_alt,
+                    Icon(Icons.add_a_photo,
                         size: 50, color: Colors.orange),
                     SizedBox(height: 10),
                     Text(
                       "Adicionar imagem\nJPG, PNG somente",
                       textAlign: TextAlign.center,
-                      style: TextStyle(color: Colors.orange),
-                    ),
+                      style: TextStyle(
+                        color: Colors.orange,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    )
                   ],
                 )
                     : ClipRRect(
@@ -115,27 +153,53 @@ class _FlyersCreatePageState extends State<FlyersCreatePage> {
               ),
             ),
 
-            const SizedBox(height: 25),
+            const SizedBox(height: 30),
 
-            _campoData(
-              label: "Data de postagem",
-              controller: postagemCtrl,
-              onPress: () => selecionarData(postagemCtrl),
-            ),
-
-            const SizedBox(height: 15),
-
-            _campoData(
-              label: "Data de vencimento",
-              controller: vencimentoCtrl,
-              onPress: () => selecionarData(vencimentoCtrl),
+            // 📌 data de expiração
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Data de expiração",
+                  style:
+                  TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                ),
+                const SizedBox(height: 5),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  decoration: BoxDecoration(
+                    border: Border.all(color: Colors.orange),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: dataExpiracaoCtrl,
+                          readOnly: true,
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: "DD/MM/YYYY",
+                          ),
+                        ),
+                      ),
+                      IconButton(
+                        icon: const Icon(Icons.calendar_month,
+                            color: Colors.orange),
+                        onPressed: selecionarData,
+                      )
+                    ],
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 40),
 
+            // 📌 botão postar
             SizedBox(
               width: double.infinity,
-              height: 45,
+              height: 48,
               child: ElevatedButton(
                 onPressed: salvar,
                 style: ElevatedButton.styleFrom(
@@ -146,54 +210,16 @@ class _FlyersCreatePageState extends State<FlyersCreatePage> {
                 ),
                 child: const Text(
                   "Postar",
-                  style: TextStyle(fontSize: 18, color: Colors.white),
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
                 ),
               ),
             )
           ],
         ),
       ),
-    );
-  }
-
-  Widget _campoData({
-    required String label,
-    required TextEditingController controller,
-    required VoidCallback onPress,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label,
-            style: const TextStyle(
-                fontSize: 15, fontWeight: FontWeight.w600)),
-
-        const SizedBox(height: 5),
-
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.orange),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: controller,
-                  readOnly: true,
-                  decoration: const InputDecoration(
-                      border: InputBorder.none, hintText: "MM/DD/YYYY"),
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.calendar_month, color: Colors.orange),
-                onPressed: onPress,
-              )
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
