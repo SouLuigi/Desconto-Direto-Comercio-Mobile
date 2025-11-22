@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-
 
 import 'package:desconto_direto_comercio_mobile/data/model/product_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
-import'package:desconto_direto_comercio_mobile/ui/offer/view_models/offer_viewmodel.dart';
+import 'package:provider/provider.dart';
+import '../view_models/offer_viewmodel.dart';
+
 class OfferCreateForm extends StatefulWidget {
   final List<Product> produtos;
 
@@ -37,23 +37,38 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
         _label("Selecione o Produto"),
         DropdownButtonFormField<Product>(
           value: produtoSelecionado,
-          items: widget.produtos.map((p) {
-            return DropdownMenuItem<Product>(
-              value: p,
-              child: Text(p.nome),
-            );
-          }).toList(),
-          decoration: _decoration(),
-          onChanged: (p) {
-            setState(() {
-              produtoSelecionado = p;
 
-              nome.text = p!.nome;
-              medida.text = p.medida;
-              unidade.text = p.unidadeMedida;
-              categoria.text = p.categoria;
-            });
-          },
+          items: widget.produtos.isEmpty
+              ? [
+                  const DropdownMenuItem(
+                    value: null,
+                    child: Text(
+                      "Nenhum produto disponível",
+                      style: TextStyle(color: Colors.red),
+                    ),
+                  )
+                ]
+              : widget.produtos.map((p) {
+                  return DropdownMenuItem<Product>(
+                    value: p,
+                    child: Text(p.nome),
+                  );
+                }).toList(),
+
+          decoration: _decoration(),
+
+          onChanged: widget.produtos.isEmpty
+              ? null
+              : (p) {
+                  setState(() {
+                    produtoSelecionado = p;
+
+                    nome.text = p!.nome;
+                    medida.text = p.medida;
+                    unidade.text = p.unidadeMedida;
+                    categoria.text = p.categoria;
+                  });
+                },
         ),
 
         const SizedBox(height: 25),
@@ -71,10 +86,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
           ),
           alignment: Alignment.center,
           child: produtoSelecionado == null
-              ? const Text(
-                  "Selecione um produto",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                )
+              ? const SizedBox()
               : Image.network(
                   produtoSelecionado!.fotoUrl,
                   height: 200,
@@ -86,7 +98,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
 
         const SizedBox(height: 25),
 
-        // ------------------ CAMPOS ------------------
+        // ------------------ CAMPOS EDITÁVEIS ------------------
         _label("Nome do Produto"),
         TextField(controller: nome, decoration: _decoration()),
 
@@ -167,30 +179,34 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
               ),
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            onPressed: () async {
-              if (produtoSelecionado == null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content: Text("Selecione um produto antes de postar.")),
-                );
-                return;
-              }
+            onPressed: widget.produtos.isEmpty
+                ? null
+                : () async {
+                    if (produtoSelecionado == null) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Selecione um produto antes de postar."),
+                        ),
+                      );
+                      return;
+                    }
 
-              final offer = Offer(
-                id: 0,
-                validade: DateFormat("MM/dd/yyyy").parse(data.text),
-                dataPostagem: DateTime.now(),
-                comercioId: 1,
-                likes: 0,
-                preco: double.parse(preco.text),
-                product: produtoSelecionado!,
-              );
+                    final offer = Offer(
+                      id: 0,
+                      validade: DateFormat("MM/dd/yyyy").parse(data.text),
+                      dataPostagem: DateTime.now(),
+                      comercioId: 1,
+                      likes: 0,
+                      preco: double.parse(preco.text),
+                      product: produtoSelecionado!,
+                    );
 
-              final ok =
-                  await context.read<OfferViewModel>().createOffer(offer);
+                    final ok = await context
+                        .read<OfferViewModel>()
+                        .createOffer(offer);
 
-              if (ok) Navigator.pop(context);
-            },
+                    if (ok) Navigator.pop(context);
+                  },
             child: const Text(
               "Postar",
               style: TextStyle(fontSize: 18, color: Colors.white),
