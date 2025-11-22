@@ -74,7 +74,7 @@ class CommerceRepository {
     }
   }
 
-  Future<Commerce> getById(int id) async {
+  Future<Commerce> getById(String id) async {
     final uri = Uri.parse('$_baseUrl/comercios/find/$id');
     final response = await http.get(
       uri,
@@ -112,7 +112,7 @@ class CommerceRepository {
     }
   }
 
-  Future<void> delete(int id) async {
+  Future<void> delete(String id) async {
     final uri = Uri.parse('$_baseUrl/comercios/delete/$id');
     final response = await http.delete(uri);
     if (response.statusCode == 200 || response.statusCode == 204) {
@@ -123,7 +123,7 @@ class CommerceRepository {
     }
   }
 
-  Future<void> uploadImage(int id, File image) async {
+  Future<void> uploadImage(String id, File image) async {
     final _baseUrl = ApiConfig.baseUrl;
     final uri = Uri.parse('$_baseUrl/comercios/upload-foto-comercio/$id');
     final request = http.MultipartRequest('POST', uri);
