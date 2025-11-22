@@ -35,7 +35,12 @@ final GoRouter appRouter = GoRouter(
       },
     ),
 
-     
+     GoRoute(
+      path: Routes.offer,
+      builder: (BuildContext context, GoRouterState state) {
+        return const OfferScreen();
+      },
+    ),
 
 
     // Você pode adicionar rotas mais complexas aqui, se necessário.

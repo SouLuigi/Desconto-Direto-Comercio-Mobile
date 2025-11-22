@@ -1,45 +1,65 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import '../../../data/model/offer_model.dart';
+import '../../offer/view_models/offer_viewmodel.dart';
 
 class OfferEditForm extends StatefulWidget {
-  const OfferEditForm({super.key});
+  final Offer offer;
+
+  const OfferEditForm({super.key, required this.offer});
 
   @override
   State<OfferEditForm> createState() => _OfferEditFormState();
 }
 
 class _OfferEditFormState extends State<OfferEditForm> {
-  final nome = TextEditingController(text: "Veja Limpador Spray Anti Bac Banheiro Oxi");
-  final medida = TextEditingController(text: "500");
-  final unidade = TextEditingController(text: "ML");
-  final categoria = TextEditingController(text: "Limpeza");
-  final preco = TextEditingController(text: "R\$ 8,90");
-  final data = TextEditingController(text: "08/17/2025");
+  late TextEditingController nome;
+  late TextEditingController medida;
+  late TextEditingController unidade;
+  late TextEditingController categoria;
+  late TextEditingController preco;
+  late TextEditingController data;
+
+  @override
+  void initState() {
+    super.initState();
+
+    nome = TextEditingController(text: widget.offer.product.nome);
+    medida = TextEditingController(text: widget.offer.product.medida);
+    unidade = TextEditingController(text: widget.offer.product.unidadeMedida);
+    categoria = TextEditingController(text: widget.offer.product.categoria);
+    preco = TextEditingController(text: widget.offer.preco.toString());
+    data = TextEditingController(
+      text: DateFormat('MM/dd/yyyy').format(widget.offer.validade),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<OfferViewModel>();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
-        // ------------------- IMAGE BOX -------------------
-        Container(
-          width: double.infinity,
-          height: 250,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.orange,
-              width: 2,
-              style: BorderStyle.solid,
+        // 🔶 IMAGEM DO PRODUTO
+        Center(
+          child: Container(
+            height: 230,
+            width: double.infinity,
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.orange, width: 2),
+              borderRadius: BorderRadius.circular(12),
             ),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          alignment: Alignment.center,
-          child: Image.network(
-            "https://static.paodeacucar.com/media/uploads/produtos/7891035612702_1.jpg",
-            height: 200,
-            fit: BoxFit.contain,
-            errorBuilder: (_, __, ___) => const Icon(Icons.broken_image, size: 80),
+            child: Image.network(
+              widget.offer.product.fotoUrl,
+              height: 180,
+              fit: BoxFit.contain,
+              errorBuilder: (_, __, ___) =>
+                  const Icon(Icons.broken_image, size: 80),
+            ),
           ),
         ),
 
@@ -76,12 +96,12 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
         const SizedBox(height: 20),
 
-        _label("Categoria do Produto"),
+        _label("Categoria"),
         TextField(controller: categoria, decoration: _decoration()),
 
         const SizedBox(height: 20),
 
-        _label("Data de Postagem"),
+        _label("Data de Validade"),
         TextField(
           controller: data,
           decoration: _decoration().copyWith(
@@ -90,9 +110,9 @@ class _OfferEditFormState extends State<OfferEditForm> {
               onPressed: () async {
                 final selected = await showDatePicker(
                   context: context,
+                  initialDate: widget.offer.validade,
                   firstDate: DateTime(2020),
                   lastDate: DateTime(2040),
-                  initialDate: DateTime.now(),
                 );
                 if (selected != null) {
                   data.text = DateFormat('MM/dd/yyyy').format(selected);
@@ -109,24 +129,42 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
         const SizedBox(height: 30),
 
-        // ------------------- BOTÃO SALVAR -------------------
+        // BOTÃO SALVAR
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
+            onPressed: () async {
+              final alteredOffer = Offer(
+                id: widget.offer.id,
+                comercioId: widget.offer.comercioId,
+                likes: widget.offer.likes,
+                dataPostagem: widget.offer.dataPostagem,
+                validade: DateFormat('MM/dd/yyyy').parse(data.text),
+                preco: double.tryParse(preco.text) ?? widget.offer.preco,
+                product: widget.offer.product, // ← NÃO EDITA PRODUTO
+              );
+
+              final success = await vm.updateOffer(alteredOffer);
+
+              if (success && mounted) {
+                Navigator.pop(context);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("Oferta atualizada com sucesso")),
+                );
+              }
+            },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange,
+              padding: const EdgeInsets.symmetric(vertical: 15),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            onPressed: () {},
-            child: const Text(
-              "Salvar Alterações",
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
+            child: vm.isLoading
+                ? const CircularProgressIndicator(color: Colors.white)
+                : const Text("Salvar", style: TextStyle(fontSize: 18)),
           ),
-        )
+        ),
       ],
     );
   }
