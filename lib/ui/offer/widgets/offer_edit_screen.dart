@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/themes/colors.dart';
 import 'offer_edit_form.dart';
 
 class OfferEditScreen extends StatelessWidget {

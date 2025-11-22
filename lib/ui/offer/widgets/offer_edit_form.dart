@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-
 class OfferEditForm extends StatefulWidget {
   const OfferEditForm({super.key});
 
@@ -20,7 +19,6 @@ class _OfferEditFormState extends State<OfferEditForm> {
   @override
   void initState() {
     super.initState();
-
     nome = TextEditingController(text: "Veja Limpador Spray Anti Bac Banheiro Oxi");
     medida = TextEditingController(text: "500");
     unidade = TextEditingController(text: "ML");
@@ -30,31 +28,22 @@ class _OfferEditFormState extends State<OfferEditForm> {
   }
 
   @override
-  void dispose() {
-    nome.dispose();
-    medida.dispose();
-    unidade.dispose();
-    categoria.dispose();
-    preco.dispose();
-    data.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // IMAGEM
+        // IMAGEM DO PRODUTO
         Container(
-          padding: const EdgeInsets.all(10),
+          width: double.infinity,
+          height: 250,
           decoration: BoxDecoration(
             border: Border.all(
               color: Colors.orange,
-              style: BorderStyle.solid,
               width: 2,
+              style: BorderStyle.solid,
             ),
             borderRadius: BorderRadius.circular(12),
           ),
+          alignment: Alignment.center,
           child: Image.network(
             "https://static.paodeacucar.com/media/uploads/produtos/7891035612702_1.jpg",
             height: 200,
@@ -62,84 +51,83 @@ class _OfferEditFormState extends State<OfferEditForm> {
           ),
         ),
 
-        const SizedBox(height: 20),
+        const SizedBox(height: 25),
 
-        // Nome do Produto
+        _label("Nome do Produto"),
         TextField(
           controller: nome,
-          decoration: const InputDecoration(
-            labelText: "Nome do Produto",
-          ),
+          decoration: _inputDecoration(),
         ),
 
-        const SizedBox(height: 15),
+        const SizedBox(height: 20),
 
-        // Medida + Unidade
         Row(
           children: [
             Expanded(
-              child: TextField(
-                controller: medida,
-                decoration: const InputDecoration(
-                  labelText: "Medida",
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _label("Medida"),
+                  TextField(
+                    controller: medida,
+                    decoration: _inputDecoration(),
+                  ),
+                ],
               ),
             ),
-            const SizedBox(width: 10),
+            const SizedBox(width: 15),
             Expanded(
-              child: TextField(
-                controller: unidade,
-                decoration: const InputDecoration(
-                  labelText: "Unidade de Medida",
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _label("Unidade de Medida"),
+                  TextField(
+                    controller: unidade,
+                    decoration: _inputDecoration(),
+                  ),
+                ],
               ),
             ),
           ],
         ),
 
-        const SizedBox(height: 15),
+        const SizedBox(height: 20),
 
-        // Categoria
+        _label("Categoria do Produto"),
         TextField(
           controller: categoria,
-          decoration: const InputDecoration(
-            labelText: "Categoria do Produto",
-          ),
+          decoration: _inputDecoration(),
         ),
 
-        const SizedBox(height: 15),
+        const SizedBox(height: 20),
 
-        // Data de postagem
+        _label("Data de postagem"),
         TextField(
           controller: data,
-          decoration: InputDecoration(
-            labelText: "Data de Postagem",
+          decoration: _inputDecoration().copyWith(
             suffixIcon: IconButton(
-              icon: const Icon(Icons.calendar_month),
+              icon: const Icon(Icons.calendar_month, color: Colors.orange),
               onPressed: () async {
-                DateTime? picked = await showDatePicker(
+                final selected = await showDatePicker(
                   context: context,
-                  firstDate: DateTime(2020),
+                  firstDate: DateTime(2000),
                   lastDate: DateTime(2040),
                   initialDate: DateTime.now(),
                 );
-
-                if (picked != null) {
-                  data.text = DateFormat("MM/dd/yyyy").format(picked);
+                if (selected != null) {
+                  data.text = DateFormat('MM/dd/yyyy').format(selected);
                 }
               },
             ),
           ),
         ),
 
-        const SizedBox(height: 15),
+        const SizedBox(height: 20),
 
-        // Preço
+        _label("Preço"),
         TextField(
           controller: preco,
-          decoration: const InputDecoration(
-            labelText: "Preço",
-          ),
+          decoration: _inputDecoration(),
         ),
 
         const SizedBox(height: 30),
@@ -153,16 +141,43 @@ class _OfferEditFormState extends State<OfferEditForm> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 14),
+              padding: const EdgeInsets.symmetric(vertical: 16),
             ),
             onPressed: () {},
             child: const Text(
               "Postar",
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget _label(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 5),
+      child: Text(
+        text,
+        style: const TextStyle(
+          fontSize: 13,
+          color: Color(0xFF8A8A8A),
+        ),
+      ),
+    );
+  }
+
+  InputDecoration _inputDecoration() {
+    return InputDecoration(
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      enabledBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Color(0xFFCDCDCD), width: 1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: const BorderSide(color: Colors.orange, width: 2),
+        borderRadius: BorderRadius.circular(8),
+      ),
     );
   }
 }
