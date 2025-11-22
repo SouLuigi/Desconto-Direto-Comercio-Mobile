@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'offer_edit_form.dart';
+import 'offer_create_form.dart';
 
-class OfferScreen extends StatelessWidget {
-  const OfferScreen({super.key});
+class OfferCreateScreen extends StatelessWidget {
+  const OfferCreateScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-
         appBar: AppBar(
           elevation: 0,
           backgroundColor: const Color(0xFF003049),
@@ -17,16 +16,10 @@ class OfferScreen extends StatelessWidget {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text(
-            "Editar Oferta",
-            style: TextStyle(color: Colors.white),
-          ),
-          centerTitle: true,
         ),
-
         body: const SingleChildScrollView(
           padding: EdgeInsets.all(20),
-          child: OfferEditForm(),
+          child: OfferCreateForm(),
         ),
       ),
     );

@@ -1,28 +1,59 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:file_picker/file_picker.dart';
 
-class OfferEditForm extends StatefulWidget {
-  const OfferEditForm({super.key});
+class OfferCreateForm extends StatefulWidget {
+  const OfferCreateForm({super.key});
 
   @override
-  State<OfferEditForm> createState() => _OfferEditFormState();
+  State<OfferCreateForm> createState() => _OfferCreateFormState();
 }
 
-class _OfferEditFormState extends State<OfferEditForm> {
-  final nome = TextEditingController(text: "Veja Limpador Spray Anti Bac Banheiro Oxi");
-  final medida = TextEditingController(text: "500");
-  final unidade = TextEditingController(text: "ML");
-  final categoria = TextEditingController(text: "Limpeza");
-  final preco = TextEditingController(text: "R\$ 8,90");
-  final data = TextEditingController(text: "08/17/2025");
+class _OfferCreateFormState extends State<OfferCreateForm> {
+  final search = TextEditingController();
+  final nome = TextEditingController();
+  final medida = TextEditingController();
+  final unidade = TextEditingController();
+  final categoria = TextEditingController();
+  final preco = TextEditingController();
+  final data = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // SEARCH BAR
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.orange, width: 2),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: search,
+                  decoration: const InputDecoration(
+                    hintText: "Veja Limpador Spray Anti Bac Banheiro Oxi",
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.search, color: Colors.orange),
+                onPressed: () {},
+              )
+            ],
+          ),
+        ),
 
-        // ------------------- IMAGE BOX -------------------
+        const SizedBox(height: 25),
+        
+      
+
+        // IMAGE BOX
         Container(
           width: double.infinity,
           height: 250,
@@ -81,7 +112,7 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
         const SizedBox(height: 20),
 
-        _label("Data de Postagem"),
+        _label("Data de postagem"),
         TextField(
           controller: data,
           decoration: _decoration().copyWith(
@@ -109,7 +140,7 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
         const SizedBox(height: 30),
 
-        // ------------------- BOTÃO SALVAR -------------------
+        // BOTÃO POSTAR
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -122,7 +153,7 @@ class _OfferEditFormState extends State<OfferEditForm> {
             ),
             onPressed: () {},
             child: const Text(
-              "Salvar Alterações",
+              "Postar",
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ),

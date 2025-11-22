@@ -1,7 +1,7 @@
-import 'dart:io';
+/*import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'flyers_create_controller.dart';
+import 'package:file_picker/file_picker.dart';
+//import 'flyers_create_controller.dart';
 
 class FlyersCreatePage extends StatefulWidget {
   const FlyersCreatePage({super.key});
@@ -18,10 +18,10 @@ class _FlyersCreatePageState extends State<FlyersCreatePage> {
   final TextEditingController postagemCtrl = TextEditingController();
   final TextEditingController vencimentoCtrl = TextEditingController();
 
-  final ImagePicker picker = ImagePicker();
+  final File picker = FilePicker();
 
   Future<void> selecionarImagem() async {
-    final XFile? img = await picker.pickImage(source: ImageSource.gallery);
+    final XFile? img = await picker.file_picker(source: ImageSource.gallery);
 
     if (img != null) {
       setState(() => imagemSelecionada = File(img.path));
@@ -196,4 +196,4 @@ class _FlyersCreatePageState extends State<FlyersCreatePage> {
       ],
     );
   }
-}
+}*/

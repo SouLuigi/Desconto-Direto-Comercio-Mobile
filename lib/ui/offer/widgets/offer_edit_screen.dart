@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../../core/themes/colors.dart';
 import 'offer_edit_form.dart';
 
 class OfferEditScreen extends StatelessWidget {
@@ -7,10 +6,23 @@ class OfferEditScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const SafeArea(
+    return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: const Color(0xFF003049),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text(
+            "Editar Oferta",
+            style: TextStyle(color: Colors.white),
+          ),
+          centerTitle: true,
+        ),
+        body: const SingleChildScrollView(
           padding: EdgeInsets.all(20),
           child: OfferEditForm(),
         ),
@@ -18,3 +30,4 @@ class OfferEditScreen extends StatelessWidget {
     );
   }
 }
+

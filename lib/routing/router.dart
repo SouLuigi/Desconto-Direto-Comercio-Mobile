@@ -1,5 +1,6 @@
 import 'package:desconto_direto_comercio_mobile/ui/flyers/viewmodel/flyer_create_page.dart';
 import 'package:desconto_direto_comercio_mobile/ui/flyers/viewmodel/flyer_page.dart';
+import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_create_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_edit_form.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_screen.dart';
 import 'package:flutter/cupertino.dart';
@@ -34,12 +35,7 @@ final GoRouter appRouter = GoRouter(
       },
     ),
 
-     GoRoute(
-  path: Routes.offer,
-  builder: (BuildContext context, GoRouterState state) {
-    return const OfferScreen();
-  },
-),
+     
 
 
     // Você pode adicionar rotas mais complexas aqui, se necessário.
