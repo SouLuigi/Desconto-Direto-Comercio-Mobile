@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
-class WidgetCardOffer extends StatelessWidget {
+class WidgetCardOffer extends StatefulWidget {
+
   const WidgetCardOffer({super.key});
 
   @override
