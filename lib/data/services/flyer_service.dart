@@ -39,7 +39,7 @@ class FlyerService {
     }
   }
 
-  Future<Flyer> getFlyerById(int id) async {
+  Future<Flyer> getFlyerById(String id) async {
     try {
       final jsonResponse = await _repository.getById(id);
       return jsonResponse;
@@ -48,7 +48,7 @@ class FlyerService {
     }
   }
 
-  Future<void> deleteFlyer(int id) async {
+  Future<void> deleteFlyer(String id) async {
     try {
       final jsonResponse = await _repository.delete(id);
       return jsonResponse;
@@ -57,7 +57,7 @@ class FlyerService {
     }
   }
 
-  Future<bool> uploadImageOfFlyer(int id, File image) async {
+  Future<bool> uploadImageOfFlyer(String id, File image) async {
     try {
       await _repository.uploadImage(id, image);
       return true;

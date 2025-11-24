@@ -6,4 +6,5 @@ abstract final class AppColors{
   static const White1 = Color(0xFFFFFFFF);
   static const Black1 = Color(0xFF000000);
   static const Red1 = Color(0xFFBC2121);
+  static const Orange1 = Color(0xFFFB8500);
 }

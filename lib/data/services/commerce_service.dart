@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:desconto_direto_comercio_mobile/data/model/flyer_model.dart';
-import 'package:desconto_direto_comercio_mobile/data/model/login_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
+import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
 
 import '../model/commerce_model.dart';
 import '../model/register_model.dart';
@@ -10,8 +10,9 @@ import '../repositories/commerce_repository.dart';
 
 class CommerceService {
   final CommerceRepository _repository;
+  final LocalStorageService _localStorage;
 
-  CommerceService(this._repository);
+  CommerceService(this._repository, this._localStorage);
 
   Future<Commerce> createCommerce(RegisterModel data) async {
     final emailRegex = RegExp(r'^[^@]+@[^@]+\.[^@]+');
@@ -29,21 +30,21 @@ class CommerceService {
     }
   }
 
-  Future<Commerce> login(LoginModel data) async {
-    if (data.email.isEmpty || data.senha.isEmpty) {
+  Future<Commerce> login(String email, String password) async {
+    if (email.isEmpty || password.isEmpty) {
       throw Exception('E-mail e senha são obrigatórios.');
     }
     try {
-      final List<Commerce> allCommerces = await _repository.getAll();
-      final commerceLogin = allCommerces.firstWhere(
-        (commerce) =>
-            commerce.email == data.email && commerce.senha == data.senha,
-        orElse: () => throw Exception("Email ou senhas incorretos!"),
-      );
-      return commerceLogin;
+      final commerce = await _repository.login(email, password);
+      await _localStorage.saveToken(commerce.id.toString());
+      return commerce;
     } catch (e) {
       rethrow;
     }
+  }
+
+  Future<void> logout() async {
+    await _localStorage.deleteToken();
   }
 
   Future<List<Commerce>> getAllCommerces() async {
@@ -54,7 +55,7 @@ class CommerceService {
     }
   }
 
-  Future<Commerce> getCommerceById(int id) async {
+  Future<Commerce> getCommerceById(String id) async {
     try {
       return await _repository.getById(id);
     } catch (e) {
@@ -62,7 +63,7 @@ class CommerceService {
     }
   }
 
-  Future<Offer?> getOffersByIdCommerce(int id) async {
+  Future<Offer?> getOffersByIdCommerce(String id) async {
     try {
       final jsonResponse = await _repository.getById(id);
       return jsonResponse.offer;
@@ -71,7 +72,7 @@ class CommerceService {
     }
   }
 
-  Future<Flyer?> getFlyersByIdCommerce(int id) async {
+  Future<Flyer?> getFlyersByIdCommerce(String id) async {
     try {
       final jsonResponse = await _repository.getById(id);
       return jsonResponse.flyer;
@@ -91,7 +92,7 @@ class CommerceService {
     }
   }
 
-  Future<void> deleteCommerce(int id) async {
+  Future<void> deleteCommerce(String id) async {
     try {
       return await _repository.delete(id);
     } catch (e) {
@@ -99,7 +100,7 @@ class CommerceService {
     }
   }
 
-  Future<bool> uploadImageOfCommerce(int id, File image) async {
+  Future<bool> uploadImageOfCommerce(String id, File image) async {
     try {
       await _repository.uploadImage(id, image);
       return true;
@@ -109,3 +110,4 @@ class CommerceService {
     }
   }
 }
+

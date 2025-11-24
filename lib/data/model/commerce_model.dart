@@ -18,6 +18,7 @@ class Commerce {
   final DateTime? horarioFechamento;
   final bool? aberto;
   final String? fotoUrl;
+  final String? endereco;
   final Offer? offer;
   final Flyer? flyer;
 
@@ -40,6 +41,7 @@ class Commerce {
     this.fotoUrl,
     this.offer,
     this.flyer,
+    this.endereco,
   });
 
   factory Commerce.fromJson(Map<String, dynamic> json) {

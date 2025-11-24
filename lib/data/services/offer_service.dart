@@ -33,7 +33,7 @@ class OfferService {
     }
   }
 
-  Future<Offer> getOfferById(int id) async {
+  Future<Offer> getOfferById(String id) async {
     try {
       final jsonResponse = await _repository.getById(id);
       return jsonResponse;
@@ -84,7 +84,7 @@ class OfferService {
       rethrow;
     }
   }
-  Future<void> deleteOffer(int id) async {
+  Future<void> deleteOffer(String id) async {
     try {
       await _repository.delete(id);
     } catch (e) {
