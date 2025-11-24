@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-
 import 'package:desconto_direto_comercio_mobile/data/model/product_model.dart';
-import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
 import '../view_models/offer_viewmodel.dart';
-
+import 'package:provider/provider.dart';
+import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
 class OfferCreateForm extends StatefulWidget {
   final List<Product> produtos;
 
@@ -33,27 +31,16 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-
         // ------------------ DROPDOWN PRODUTOS ------------------
         _label("Selecione o Produto"),
         DropdownButtonFormField<Product>(
           value: produtoSelecionado,
-          items: widget.produtos.isEmpty
-              ? [
-                  const DropdownMenuItem(
-                    value: null,
-                    child: Text(
-                      "Nenhum produto disponível",
-                      style: TextStyle(color: Colors.red),
-                    ),
-                  ),
-                ]
-              : widget.produtos.map((p) {
-                  return DropdownMenuItem<Product>(
-                    value: p,
-                    child: Text(p.nome),
-                  );
-                }).toList(),
+          items: widget.produtos.map((p) {
+            return DropdownMenuItem<Product>(
+              value: p,
+              child: Text(p.nome),
+            );
+          }).toList(),
           decoration: _decoration(),
           onChanged: widget.produtos.isEmpty
               ? null
@@ -80,8 +67,8 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
             borderRadius: BorderRadius.circular(12),
           ),
           alignment: Alignment.center,
-          child: produtoSelecionado == null
-              ? const SizedBox()
+          child: (produtoSelecionado == null || produtoSelecionado!.fotoUrl.isEmpty)
+              ? const Icon(Icons.broken_image, size: 80)
               : Image.network(
                   produtoSelecionado!.fotoUrl,
                   height: 200,
@@ -95,11 +82,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
 
         // ------------------ CAMPOS NÃO EDITÁVEIS ------------------
         _label("Nome do Produto"),
-        TextField(
-          controller: nome,
-          readOnly: true,
-          decoration: _decoration(),
-        ),
+        _campoNaoEditavel(nome.text),
 
         const SizedBox(height: 20),
 
@@ -110,11 +93,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _label("Medida"),
-                  TextField(
-                    controller: medida,
-                    readOnly: true,
-                    decoration: _decoration(),
-                  ),
+                  _campoNaoEditavel(medida.text),
                 ],
               ),
             ),
@@ -124,11 +103,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _label("Unidade de Medida"),
-                  TextField(
-                    controller: unidade,
-                    readOnly: true,
-                    decoration: _decoration(),
-                  ),
+                  _campoNaoEditavel(unidade.text),
                 ],
               ),
             ),
@@ -138,19 +113,15 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
         const SizedBox(height: 20),
 
         _label("Categoria do Produto"),
-        TextField(
-          controller: categoria,
-          readOnly: true,
-          decoration: _decoration(),
-        ),
+        _campoNaoEditavel(categoria.text),
 
         const SizedBox(height: 20),
 
-        // ------------------ CAMPOS EDITÁVEIS ------------------
-
+        // ------------------ EDITÁVEIS ------------------
         _label("Data de Postagem"),
         TextField(
           controller: data,
+          readOnly: true,
           decoration: _decoration().copyWith(
             suffixIcon: IconButton(
               icon: const Icon(Icons.calendar_month, color: Colors.orange),
@@ -161,6 +132,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
                   firstDate: DateTime(2020),
                   lastDate: DateTime(2040),
                 );
+
                 if (selected != null) {
                   data.text = DateFormat("MM/dd/yyyy").format(selected);
                 }
@@ -174,8 +146,8 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
         _label("Preço"),
         TextField(
           controller: preco,
-          decoration: _decoration(),
           keyboardType: TextInputType.number,
+          decoration: _decoration(),
         ),
 
         const SizedBox(height: 30),
@@ -191,34 +163,22 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
               ),
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            onPressed: widget.produtos.isEmpty
-                ? null
-                : () async {
-                    if (produtoSelecionado == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Selecione um produto antes de postar."),
-                        ),
-                      );
-                      return;
-                    }
+            onPressed: () async {
+              if (produtoSelecionado == null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Selecione um produto antes de postar."),
+                  ),
+                );
+                return;
+              }
 
-                    final offer = Offer(
-                      id: 0,
-                      validade: DateFormat("MM/dd/yyyy").parse(data.text),
-                      dataPostagem: DateTime.now(),
-                      comercioId: 1,
-                      likes: 0,
-                      preco: double.parse(preco.text),
-                      product: produtoSelecionado!,
-                    );
+              final ok = await context.read<OfferViewModel>().createOffer(
+                    _montarOferta(produtoSelecionado!),
+                  );
 
-                    final ok = await context
-                        .read<OfferViewModel>()
-                        .createOffer(offer);
-
-                    if (ok) Navigator.pop(context);
-                  },
+              if (ok) Navigator.pop(context);
+            },
             child: const Text(
               "Postar",
               style: TextStyle(fontSize: 18, color: Colors.white),
@@ -229,7 +189,35 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
     );
   }
 
-  // ------------------ HELPERS ------------------
+  // ----------- Helpers -------------
+
+  Offer _montarOferta(Product p) {
+    return Offer(
+      id: 0,
+      validade: DateFormat("MM/dd/yyyy").parse(data.text),
+      dataPostagem: DateTime.now(),
+      comercioId: 1,
+      likes: 0,
+      preco: double.parse(preco.text),
+      product: p,
+    );
+  }
+
+  Widget _campoNaoEditavel(String valor) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      decoration: BoxDecoration(
+        border: Border.all(color: Color(0xFFCDCDCD)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        valor.isEmpty ? "—" : valor,
+        style: const TextStyle(fontSize: 16),
+      ),
+    );
+  }
+
   Widget _label(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 5),

@@ -1,47 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-
-import '../../../data/model/offer_model.dart';
-import '../view_models/offer_viewmodel.dart';
 
 class OfferEditForm extends StatefulWidget {
-  final Offer offer;
-
-  const OfferEditForm({
-    super.key,
-    required this.offer,
-  });
+  const OfferEditForm({super.key});
 
   @override
   State<OfferEditForm> createState() => _OfferEditFormState();
 }
 
 class _OfferEditFormState extends State<OfferEditForm> {
-  late TextEditingController nome;
-  late TextEditingController medida;
-  late TextEditingController unidade;
-  late TextEditingController categoria;
-  late TextEditingController preco;
-  late TextEditingController data;
+  // VALORES FAKES PARA TESTE
+  final String nomeProduto = "Veja Limpa Piso Max";
+  final String medidaProduto = "500";
+  final String unidadeProduto = "ML";
+  final String categoriaProduto = "Limpeza";
+  final String imagemProduto =
+      "https://static.paodeacucar.com/media/uploads/produtos/7891035612702_1.jpg";
 
-  @override
-  void initState() {
-    super.initState();
-
-    nome = TextEditingController(text: widget.offer.product.nome);
-    medida = TextEditingController(text: widget.offer.product.medida);
-    unidade = TextEditingController(text: widget.offer.product.unidadeMedida);
-    categoria = TextEditingController(text: widget.offer.product.categoria);
-    preco = TextEditingController(text: widget.offer.preco.toString());
-    data = TextEditingController(
-        text: DateFormat("MM/dd/yyyy").format(widget.offer.validade));
-  }
+  // CAMPOS EDITÁVEIS
+  final data = TextEditingController(text: "12/31/2025");
+  final preco = TextEditingController(text: "8.90");
 
   @override
   Widget build(BuildContext context) {
-    final product = widget.offer.product;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -55,7 +36,7 @@ class _OfferEditFormState extends State<OfferEditForm> {
           ),
           alignment: Alignment.center,
           child: Image.network(
-            product.fotoUrl,
+            imagemProduto,
             height: 200,
             fit: BoxFit.contain,
             errorBuilder: (_, __, ___) =>
@@ -65,13 +46,9 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
         const SizedBox(height: 25),
 
-        // ------------------ CAMPOS NÃO EDITÁVEIS ------------------
+        // ------------------ CAMPOS  ------------------
         _label("Nome do Produto"),
-        TextField(
-          controller: nome,
-          readOnly: true,
-          decoration: _decoration(),
-        ),
+        _campoNaoEditavel(nomeProduto),
 
         const SizedBox(height: 20),
 
@@ -82,11 +59,7 @@ class _OfferEditFormState extends State<OfferEditForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _label("Medida"),
-                  TextField(
-                    controller: medida,
-                    readOnly: true,
-                    decoration: _decoration(),
-                  ),
+                  _campoNaoEditavel(medidaProduto),
                 ],
               ),
             ),
@@ -95,12 +68,8 @@ class _OfferEditFormState extends State<OfferEditForm> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _label("Unidade de Medida"),
-                  TextField(
-                    controller: unidade,
-                    readOnly: true,
-                    decoration: _decoration(),
-                  ),
+                  _label("Unidade"),
+                  _campoNaoEditavel(unidadeProduto),
                 ],
               ),
             ),
@@ -110,29 +79,26 @@ class _OfferEditFormState extends State<OfferEditForm> {
         const SizedBox(height: 20),
 
         _label("Categoria do Produto"),
-        TextField(
-          controller: categoria,
-          readOnly: true,
-          decoration: _decoration(),
-        ),
+        _campoNaoEditavel(categoriaProduto),
 
         const SizedBox(height: 20),
 
-        // ------------------ CAMPOS EDITÁVEIS ------------------
-
+       
         _label("Data de Validade"),
         TextField(
           controller: data,
+          readOnly: true,
           decoration: _decoration().copyWith(
             suffixIcon: IconButton(
               icon: const Icon(Icons.calendar_month, color: Colors.orange),
               onPressed: () async {
                 final selected = await showDatePicker(
                   context: context,
-                  initialDate: widget.offer.validade,
+                  initialDate: DateTime.now(),
                   firstDate: DateTime(2020),
                   lastDate: DateTime(2040),
                 );
+
                 if (selected != null) {
                   data.text = DateFormat("MM/dd/yyyy").format(selected);
                 }
@@ -146,13 +112,12 @@ class _OfferEditFormState extends State<OfferEditForm> {
         _label("Preço"),
         TextField(
           controller: preco,
-          decoration: _decoration(),
           keyboardType: TextInputType.number,
+          decoration: _decoration(),
         ),
 
         const SizedBox(height: 30),
 
-        // ------------------ BOTÃO SALVAR ------------------
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -163,24 +128,13 @@ class _OfferEditFormState extends State<OfferEditForm> {
               ),
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            onPressed: () async {
-              final updated = Offer(
-                id: widget.offer.id,
-                validade: DateFormat("MM/dd/yyyy").parse(data.text),
-                dataPostagem: widget.offer.dataPostagem,
-                comercioId: widget.offer.comercioId,
-                likes: widget.offer.likes,
-                preco: double.parse(preco.text),
-                product: widget.offer.product,
+            onPressed: () {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text("Oferta atualizada! (fake)")),
               );
-
-              final ok =
-                  await context.read<OfferViewModel>().updateOffer(updated);
-
-              if (ok) Navigator.pop(context);
             },
             child: const Text(
-              "Salvar Alterações",
+              "Atualizar",
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ),
@@ -189,12 +143,27 @@ class _OfferEditFormState extends State<OfferEditForm> {
     );
   }
 
-  // ------------------ HELPERS ------------------
+  // ---------------- HELPERS ----------------------
+
+  Widget _campoNaoEditavel(String valor) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+      decoration: BoxDecoration(
+        border: Border.all(color: Color(0xFFCDCDCD)),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Text(
+        valor,
+        style: const TextStyle(fontSize: 16),
+      ),
+    );
+  }
+
   Widget _label(String text) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 5),
-      child: Text(
-        text,
+      child: Text(text,
         style: const TextStyle(fontSize: 13, color: Colors.grey),
       ),
     );

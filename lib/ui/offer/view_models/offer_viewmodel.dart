@@ -14,6 +14,14 @@ class OfferViewModel extends ChangeNotifier {
   Offer? selectedOffer;
 
   // ----------------------------
+  // SELECIONAR OFERTA PARA EDIÇÃO
+  // ----------------------------
+  void selectOffer(Offer offer) {
+    selectedOffer = offer;
+    notifyListeners();
+  }
+
+  // ----------------------------
   // GET ALL OFFERS
   // ----------------------------
   Future<void> fetchAllOffers() async {
@@ -33,7 +41,7 @@ class OfferViewModel extends ChangeNotifier {
   }
 
   // ----------------------------
-  // GET OFFER BY ID
+  // GET OFFER BY ID  (ainda funciona caso precise)
   // ----------------------------
   Future<void> fetchOfferById(String id) async {
     try {
