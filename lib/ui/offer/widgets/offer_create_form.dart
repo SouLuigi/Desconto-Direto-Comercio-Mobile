@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 import 'package:desconto_direto_comercio_mobile/data/model/product_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
-import 'package:provider/provider.dart';
 import '../view_models/offer_viewmodel.dart';
 
 class OfferCreateForm extends StatefulWidget {
@@ -33,11 +33,11 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+
         // ------------------ DROPDOWN PRODUTOS ------------------
         _label("Selecione o Produto"),
         DropdownButtonFormField<Product>(
           value: produtoSelecionado,
-
           items: widget.produtos.isEmpty
               ? [
                   const DropdownMenuItem(
@@ -46,7 +46,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
                       "Nenhum produto disponível",
                       style: TextStyle(color: Colors.red),
                     ),
-                  )
+                  ),
                 ]
               : widget.produtos.map((p) {
                   return DropdownMenuItem<Product>(
@@ -54,9 +54,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
                     child: Text(p.nome),
                   );
                 }).toList(),
-
           decoration: _decoration(),
-
           onChanged: widget.produtos.isEmpty
               ? null
               : (p) {
@@ -78,10 +76,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
           width: double.infinity,
           height: 250,
           decoration: BoxDecoration(
-            border: Border.all(
-              color: Colors.orange,
-              width: 2,
-            ),
+            border: Border.all(color: Colors.orange, width: 2),
             borderRadius: BorderRadius.circular(12),
           ),
           alignment: Alignment.center,
@@ -98,9 +93,13 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
 
         const SizedBox(height: 25),
 
-        // ------------------ CAMPOS EDITÁVEIS ------------------
+        // ------------------ CAMPOS NÃO EDITÁVEIS ------------------
         _label("Nome do Produto"),
-        TextField(controller: nome, decoration: _decoration()),
+        TextField(
+          controller: nome,
+          readOnly: true,
+          decoration: _decoration(),
+        ),
 
         const SizedBox(height: 20),
 
@@ -111,7 +110,11 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _label("Medida"),
-                  TextField(controller: medida, decoration: _decoration()),
+                  TextField(
+                    controller: medida,
+                    readOnly: true,
+                    decoration: _decoration(),
+                  ),
                 ],
               ),
             ),
@@ -121,7 +124,11 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _label("Unidade de Medida"),
-                  TextField(controller: unidade, decoration: _decoration()),
+                  TextField(
+                    controller: unidade,
+                    readOnly: true,
+                    decoration: _decoration(),
+                  ),
                 ],
               ),
             ),
@@ -131,9 +138,15 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
         const SizedBox(height: 20),
 
         _label("Categoria do Produto"),
-        TextField(controller: categoria, decoration: _decoration()),
+        TextField(
+          controller: categoria,
+          readOnly: true,
+          decoration: _decoration(),
+        ),
 
         const SizedBox(height: 20),
+
+        // ------------------ CAMPOS EDITÁVEIS ------------------
 
         _label("Data de Postagem"),
         TextField(
@@ -148,7 +161,6 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
                   firstDate: DateTime(2020),
                   lastDate: DateTime(2040),
                 );
-
                 if (selected != null) {
                   data.text = DateFormat("MM/dd/yyyy").format(selected);
                 }

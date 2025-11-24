@@ -38,7 +38,7 @@ final GoRouter appRouter = GoRouter(
      GoRoute(
       path: Routes.offer,
       builder: (BuildContext context, GoRouterState state) {
-        return const OfferCreateScreen();
+        return const OfferScreen();
       },
     ),
 
