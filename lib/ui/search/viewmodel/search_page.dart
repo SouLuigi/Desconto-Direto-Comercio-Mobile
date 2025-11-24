@@ -56,7 +56,6 @@ class _SearchPageState extends State<SearchPage> {
       body: SafeArea(
         child: Column(
           children: [
-            _buildTopBar(),
             _buildSearchBox(),
 
             if (loading)
@@ -92,33 +91,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  Widget _buildTopBar() {
-    return Container(
-      height: 65,
-      margin: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF003A57),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Icon(Icons.local_offer, color: Colors.white, size: 30),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 20),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: Colors.black87),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget _buildSearchBox() {
     return Padding(
