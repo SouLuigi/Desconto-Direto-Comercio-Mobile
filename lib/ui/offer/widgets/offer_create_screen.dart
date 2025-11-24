@@ -31,7 +31,7 @@ class _OfferCreateScreenState extends State<OfferCreateScreen> {
 
     try {
       final lista = await productService.getAllProduct(); 
-      // use o nome exato do seu método (getAllProducts, getAll, etc.)
+      
 
       setState(() {
         produtos = lista;
@@ -55,10 +55,7 @@ class _OfferCreateScreenState extends State<OfferCreateScreen> {
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pop(context),
           ),
-          title: const Text(
-            "Criar Oferta",
-            style: TextStyle(color: Colors.white),
-          ),
+       
           centerTitle: true,
         ),
 
