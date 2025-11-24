@@ -52,9 +52,9 @@ class _SearchPageState extends State<SearchPage> {
 
     setState(() {
       filtrados = produtos.where((p) {
-        return p.nome.toLowerCase().contains(texto) ||
-            p.categoria.toLowerCase().contains(texto) ||
-            p.medida.toLowerCase().contains(texto);
+        return p.nome.toLowerCase().startsWith(texto) ||
+            p.categoria.toLowerCase().startsWith(texto) ||
+            p.medida.toLowerCase().startsWith(texto);
       }).toList();
     });
   }

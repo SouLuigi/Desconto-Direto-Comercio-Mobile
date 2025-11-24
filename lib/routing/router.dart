@@ -1,3 +1,5 @@
+import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyer_create_screen.dart';
+import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyers_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 import '../ui/Navigation/widget/navigation_screen.dart';
@@ -27,6 +29,18 @@ final GoRouter appRouter = GoRouter(
       path: Routes.register,
       builder: (BuildContext context, GoRouterState state) {
         return const RegisterScreen();
+      },
+    ),
+    GoRoute(
+      path: Routes.flyers,
+      builder: (BuildContext context, GoRouterState state) {
+        return const FlyersScreen();
+      },
+    ),
+    GoRoute(
+      path: Routes.flyers_create,
+      builder: (BuildContext context, GoRouterState state) {
+        return const FlyerCreateScreen();
       },
     ),
 
