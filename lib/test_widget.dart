@@ -14,6 +14,7 @@ void main() {
       create: (_) => AuthViewModel(),
       // create: (_) => AuthViewModel(),
       child: MyApp(),
+
     ),
   );
 }
