@@ -4,7 +4,7 @@ import 'package:desconto_direto_comercio_mobile/data/services/commerce_service.d
 import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
 import 'package:flutter/cupertino.dart';
 
-class ProfileViewModel extends ChangeNotifier {
+class EditProfileViewModel extends ChangeNotifier {
   final _repository = CommerceRepository();
   final _localStorage = LocalStorageService();
 
@@ -13,24 +13,52 @@ class ProfileViewModel extends ChangeNotifier {
     _localStorage,
   );
 
+  final List<String> _categories = const [
+    'Supermercado / Mercearia',
+    'Padaria / Confeitaria',
+    'Açougue',
+    'Peixaria',
+    'Lanchonete / Pastelaria',
+    'Pizzaria',
+    'Oficina Mecânica',
+    'Autopeças',
+    'Borracharia',
+    'Farmácia / Drogaria',
+    'Loja de Roupas / Boutique',
+    'Loja de Calçados',
+    'Salão de Beleza / Barbearia',
+    'Pet Shop',
+    'Papelaria / Utilidades',
+    'Eletrônicos / Informática',
+    'Móveis / Decoração',
+    'Materiais de Construção',
+    'Outros',
+  ];
+  final List<String> _delivery = const ['Sim', 'Não'];
+
   bool _isLoading = false;
   String? _errorMessage;
   Commerce? _commerce;
   late final token = _localStorage.getToken();
 
-  // Getters
   bool get isLoading => _isLoading;
 
   String? get errorMessage => _errorMessage;
 
   Commerce? get commerce => _commerce;
 
+  List<String> get categories => _categories;
+
+  List<String> get delivery => _delivery;
+
   Future<void> loadCommerce() async {
     _setLoading(true);
     try {
-      _commerce = await _service.getCommerceById("2");
-
+      _commerce = await _service.getCommerceById('2');
+      print(_commerce);
       _errorMessage = null;
+      _isLoading = false;
+      notifyListeners();
     } catch (e) {
       _errorMessage = "Erro ao carregar dados: $e";
       _commerce = null;
@@ -40,8 +68,10 @@ class ProfileViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> deleteAccount() async {
-    await _service.deleteCommerce('2');
+  Future<void> updateCommerce(Commerce commerce) async {
+    _setLoading(true);
+    print(commerce.nome);
+    await _service.editCommerce(commerce);
   }
 
   void _setLoading(bool value) {
