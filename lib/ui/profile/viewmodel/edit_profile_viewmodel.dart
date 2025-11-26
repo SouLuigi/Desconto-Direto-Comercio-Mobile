@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:desconto_direto_comercio_mobile/data/model/commerce_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/repositories/commerce_repository.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/commerce_service.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 
 class EditProfileViewModel extends ChangeNotifier {
   final _repository = CommerceRepository();
@@ -39,7 +42,13 @@ class EditProfileViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   Commerce? _commerce;
-  late final token = _localStorage.getToken();
+  late final _token = _localStorage.getToken();
+  String token = '2';
+
+  File? _selectedImageFile;
+  File? get selectedImageFile => _selectedImageFile;
+
+  final ImagePicker _picker = ImagePicker();
 
   bool get isLoading => _isLoading;
 
@@ -69,9 +78,21 @@ class EditProfileViewModel extends ChangeNotifier {
   }
 
   Future<void> updateCommerce(Commerce commerce) async {
-    _setLoading(true);
-    print(commerce.nome);
-    await _service.editCommerce(commerce);
+    try {
+      _setLoading(true);
+      _errorMessage = null;
+      notifyListeners();
+
+      print("Enviando: ${commerce.toJson()}");
+
+      await _service.editCommerce(commerce);
+    } catch (e) {
+      print("Erro no update: $e");
+      _errorMessage = "Falha ao atualizar dados. Verifique sua conexão.";
+    } finally {
+      _setLoading(false);
+      notifyListeners();
+    }
   }
 
   void _setLoading(bool value) {

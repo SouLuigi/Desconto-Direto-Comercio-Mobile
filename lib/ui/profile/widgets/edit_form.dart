@@ -51,13 +51,14 @@ class _EditCommerceFormState extends State<EditCommerceForm> {
       if (_nomeController.text.isEmpty) {
         // 1. Campos de Texto Simples
         _nomeController.text = commerce.nome;
-        _telefoneController.text = commerce.telefone ?? '';
+        _telefoneController.text = commerce.telefone ?? 'Não informado';
         _telefoneCelularController.text =
-            commerce.telefoneCelular ?? ''; // Verifique o nome no seu Model
-        _enderecoController.text = commerce.endereco ?? '';
-        _bairroController.text = commerce.bairro ?? '';
-        _cepController.text = commerce.cep ?? '';
-        _instagramController.text = commerce.instagram ?? '';
+            commerce.telefoneCelular ??
+            'Não informado'; // Verifique o nome no seu Model
+        _enderecoController.text = commerce.endereco ?? 'Não informado';
+        _bairroController.text = commerce.bairro ?? 'Não informado';
+        _cepController.text = commerce.cep ?? 'Não informado';
+        _instagramController.text = commerce.instagram ?? 'Não informado';
 
         // 2. Atualizando Dropdowns e Horários (precisa de setState)
         setState(() {
@@ -101,7 +102,6 @@ class _EditCommerceFormState extends State<EditCommerceForm> {
   DateTime? _timeOfDayToDateTime(TimeOfDay? time) {
     if (time == null) return null;
     final now = DateTime.now();
-    // Cria um DateTime com a data de hoje, mas com a hora selecionada
     return DateTime(now.year, now.month, now.day, time.hour, time.minute);
   }
 

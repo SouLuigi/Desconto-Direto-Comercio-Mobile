@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:desconto_direto_comercio_mobile/data/model/commerce_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/repositories/commerce_repository.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/commerce_service.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ProfileViewModel extends ChangeNotifier {
   final _repository = CommerceRepository();
@@ -16,7 +19,8 @@ class ProfileViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   Commerce? _commerce;
-  late final token = _localStorage.getToken();
+  File? _selectedImageFile;
+  final ImagePicker _picker = ImagePicker();
 
   // Getters
   bool get isLoading => _isLoading;
@@ -25,11 +29,14 @@ class ProfileViewModel extends ChangeNotifier {
 
   Commerce? get commerce => _commerce;
 
+  File? get selectedImageFile => _selectedImageFile;
+
+  String get token => '2';
+
   Future<void> loadCommerce() async {
     _setLoading(true);
     try {
-      _commerce = await _service.getCommerceById("2");
-
+      _commerce = await _service.getCommerceById(token);
       _errorMessage = null;
     } catch (e) {
       _errorMessage = "Erro ao carregar dados: $e";
@@ -40,8 +47,56 @@ class ProfileViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> pickImage(ImageSource source) async {
+    try {
+      final XFile? pickedFile = await _picker.pickImage(
+        source: source,
+        imageQuality: 80,
+        maxWidth: 800,
+      );
+
+      if (pickedFile == null) return;
+
+      _selectedImageFile = File(pickedFile.path);
+      notifyListeners();
+
+      await _uploadImageLogic();
+    } catch (e) {
+      _errorMessage = "Erro ao selecionar imagem: $e";
+      _selectedImageFile = null;
+      notifyListeners();
+    }
+  }
+
+  // Função interna para organizar o upload
+  Future<void> _uploadImageLogic() async {
+    if (_selectedImageFile == null) return;
+
+    _setLoading(true);
+    try {
+      await _service.uploadImageOfCommerce(token, _selectedImageFile!);
+
+      await loadCommerce();
+
+      _selectedImageFile = null;
+    } catch (e) {
+      _errorMessage = "Falha no upload da imagem: $e";
+      print(_errorMessage);
+    } finally {
+      _setLoading(false);
+    }
+  }
+
   Future<void> deleteAccount() async {
-    await _service.deleteCommerce('2');
+    _setLoading(true);
+    try {
+      await _service.deleteCommerce(token);
+    } catch (e) {
+      _errorMessage = "Erro ao deletar conta";
+      print(e);
+    } finally {
+      _setLoading(false);
+    }
   }
 
   void _setLoading(bool value) {
