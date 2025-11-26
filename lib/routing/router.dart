@@ -2,6 +2,12 @@ import 'package:desconto_direto_comercio_mobile/ui/profile/edit-profile-screen.d
 import 'package:desconto_direto_comercio_mobile/ui/profile/profile_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyer_create_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyers_screen.dart';
+import 'package:desconto_direto_comercio_mobile/ui/flyers/viewmodel/flyer_create_page.dart';
+import 'package:desconto_direto_comercio_mobile/ui/flyers/viewmodel/flyer_page.dart';
+import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_create_screen.dart';
+import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_edit_form.dart';
+import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_edit_screen.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
 
@@ -59,6 +65,21 @@ final GoRouter appRouter = GoRouter(
         return const EditProfile();
       },
     ),
+
+     GoRoute(
+      path: Routes.offer,
+      builder: (BuildContext context, GoRouterState state) {
+        return const OfferCreateScreen();
+      },
+    ),
+  
+  GoRoute(
+      path: Routes.offer1,
+      builder: (BuildContext context, GoRouterState state) {
+        return const OfferEditScreen();
+      },
+    ),
+
 
     // Você pode adicionar rotas mais complexas aqui, se necessário.
   ],
