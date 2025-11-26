@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import '../../Navigation/widget/navigation_screen.dart';
 import '../viewmodel/flyer_create_viewmodel.dart';
 import '../widgets/flyer_expiration_field_widget.dart';
 import '../widgets/flyer_image_picker_widget.dart';
@@ -84,6 +85,7 @@ class _FlyerCreateScreenState extends State<FlyerCreateScreen> {
           ),
         ),
       ),
+      bottomNavigationBar: const NavigationScreen(),
     );
   }
 }
