@@ -1,3 +1,7 @@
+import 'package:desconto_direto_comercio_mobile/ui/profile/edit-profile-screen.dart';
+import 'package:desconto_direto_comercio_mobile/ui/profile/profile_screen.dart';
+import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyer_create_screen.dart';
+import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyers_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/flyers/viewmodel/flyer_create_page.dart';
 import 'package:desconto_direto_comercio_mobile/ui/flyers/viewmodel/flyer_page.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_create_screen.dart';
@@ -6,6 +10,7 @@ import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_edit_scre
 
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+
 import '../ui/Navigation/widget/navigation_screen.dart';
 import '../ui/auth/widgets/auth_screen.dart';
 import '../ui/register/widgets/register_screen.dart';
@@ -13,13 +18,13 @@ import 'routes.dart';
 
 final GoRouter appRouter = GoRouter(
   initialLocation: Routes.primary,
+  debugLogDiagnostics: true,
   routes: <RouteBase>[
-
     GoRoute(
-        path: Routes.primary,
-      builder: (BuildContext context, GoRouterState state){
-          return const NavigationScreen();
-      }
+      path: Routes.primary,
+      builder: (BuildContext context, GoRouterState state) {
+        return const NavigationScreen();
+      },
     ),
 
     GoRoute(
@@ -33,6 +38,31 @@ final GoRouter appRouter = GoRouter(
       path: Routes.register,
       builder: (BuildContext context, GoRouterState state) {
         return const RegisterScreen();
+      },
+    ),
+    GoRoute(
+      path: Routes.flyers,
+      builder: (BuildContext context, GoRouterState state) {
+        return const FlyersScreen();
+      },
+    ),
+    GoRoute(
+      path: Routes.flyers_create,
+      builder: (BuildContext context, GoRouterState state) {
+        return const FlyerCreateScreen();
+      },
+    ),
+
+    GoRoute(
+      path: Routes.profile,
+      builder: (BuildContext context, GoRouterState state) {
+        return const ProfileScreen();
+      },
+    ),
+    GoRoute(
+      path: Routes.editProfile,
+      builder: (BuildContext context, GoRouterState state) {
+        return const EditProfile();
       },
     ),
 

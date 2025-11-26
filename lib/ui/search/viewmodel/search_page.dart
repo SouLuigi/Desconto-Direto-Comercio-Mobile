@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart' hide SearchController;
-import 'search_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:desconto_direto_comercio_mobile/data/model/product_model.dart';
+import 'package:desconto_direto_comercio_mobile/data/repositories/product_repository.dart';
+import '../../../data/services/product_service.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
@@ -9,144 +11,192 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final controller = SearchController();
-  final TextEditingController searchText = TextEditingController();
+  late final ProductService productService;
 
-  bool loading = false;
-  List<String> resultados = [];
+  final TextEditingController searchCtrl = TextEditingController();
 
-  Future<void> buscar() async {
-    if (searchText.text.isEmpty) return;
+  List<Product> produtos = [];
+  List<Product> filtrados = [];
 
-    setState(() => loading = true);
+  bool loading = true;
 
-    resultados = await controller.buscarProdutos(searchText.text);
+  _SearchPageState() {
+    productService = ProductService(ProductRepository());
+  }
 
-    setState(() => loading = false);
+  @override
+  void initState() {
+    super.initState();
+    carregarProdutos();
+  }
+
+  Future<void> carregarProdutos() async {
+    try {
+      final lista = await productService.getAllProduct();
+
+      setState(() {
+        produtos = lista;
+        filtrados = lista;
+        loading = false;
+      });
+    } catch (e) {
+      setState(() => loading = false);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Erro ao carregar produtos: $e")),
+      );
+    }
+  }
+
+  void filtrarProdutos(String texto) {
+    texto = texto.toLowerCase();
+
+    setState(() {
+      filtrados = produtos.where((p) {
+        return p.nome.toLowerCase().startsWith(texto) ||
+            p.categoria.toLowerCase().startsWith(texto) ||
+            p.medida.toLowerCase().startsWith(texto);
+      }).toList();
+    });
+  }
+
+  void abrirModalProduto(Product produto) {
+    showModalBottomSheet(
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
+      ),
+      builder: (context) {
+        return Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: Image.network(
+                  produto.fotoUrl,
+                  height: 210,
+                  fit: BoxFit.cover,
+                ),
+              ),
+              const SizedBox(height: 20),
+              Text(
+                produto.nome,
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text("Categoria: ${produto.categoria}"),
+              Text("Medida: ${produto.medida} ${produto.unidadeMedida}"),
+              const SizedBox(height: 25),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.yellow.shade700,
-        onPressed: () {},
-        child: const Icon(Icons.add, size: 28, color: Colors.black),
-      ),
-
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8,
-        child: SizedBox(
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              Icon(Icons.home, color: Colors.grey, size: 28),
-              SizedBox(width: 40),
-              Icon(Icons.newspaper, color: Colors.grey, size: 28),
-            ],
-          ),
-        ),
-      ),
+      // 👉 Widgets globais do seu app
+      // appBar: const CustomTopBar(),      // Se existir
+      // bottomNavigationBar: const CustomBottomBar(selectedIndex: 2),
 
       body: SafeArea(
         child: Column(
           children: [
-            _buildTopBar(),
-            _buildSearchBox(),
-
-            if (loading)
-              const Center(
-                child: Padding(
-                  padding: EdgeInsets.only(top: 30),
-                  child: CircularProgressIndicator(),
+            // 🔎 Barra de busca
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.orange),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: TextField(
+                  controller: searchCtrl,
+                  onChanged: filtrarProdutos,
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Procure pelo produto desejado",
+                    contentPadding:
+                    EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+                    suffixIcon: Icon(Icons.search, color: Colors.orange),
+                  ),
                 ),
               ),
-
-            if (!loading && resultados.isNotEmpty)
-              Expanded(
-                child: ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: resultados.length,
-                  itemBuilder: (context, i) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: Text(
-                        resultados[i],
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTopBar() {
-    return Container(
-      height: 65,
-      margin: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF003A57),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: const [
-          Padding(
-            padding: EdgeInsets.only(left: 20),
-            child: Icon(Icons.local_offer, color: Colors.white, size: 30),
-          ),
-          Padding(
-            padding: EdgeInsets.only(right: 20),
-            child: CircleAvatar(
-              radius: 18,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, color: Colors.black87),
             ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildSearchBox() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12),
-        height: 55,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(color: Colors.orange),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          children: [
+            // 🔄 Lista / Loading / Vazio
             Expanded(
-              child: TextField(
-                controller: searchText,
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  hintText: "Procure pelo produto desejado",
-                  hintStyle: TextStyle(color: Colors.grey),
+              child: loading
+                  ? const Center(child: CircularProgressIndicator())
+                  : filtrados.isEmpty
+                  ? const Center(
+                child: Text(
+                  "Nenhum produto encontrado.",
+                  style: TextStyle(fontSize: 16),
                 ),
+              )
+                  : ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: filtrados.length,
+                itemBuilder: (context, index) {
+                  final p = filtrados[index];
+
+                  return GestureDetector(
+                    onTap: () => abrirModalProduto(p),
+                    child: Card(
+                      margin: const EdgeInsets.only(bottom: 12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      elevation: 2,
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(12),
+                              bottomLeft: Radius.circular(12),
+                            ),
+                            child: Image.network(
+                              p.fotoUrl,
+                              width: 90,
+                              height: 90,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  p.nome,
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                Text(p.categoria),
+                                Text(
+                                  "Medida: ${p.medida} ${p.unidadeMedida}",
+                                  style: const TextStyle(
+                                      color: Colors.black54),
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
             ),
-            GestureDetector(
-              onTap: buscar,
-              child: const Icon(Icons.search, color: Colors.orange, size: 28),
-            )
           ],
         ),
       ),

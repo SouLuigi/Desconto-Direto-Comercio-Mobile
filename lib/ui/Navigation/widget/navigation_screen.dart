@@ -2,9 +2,11 @@ import 'package:desconto_direto_comercio_mobile/data/model/commerce_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/repositories/commerce_repository.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/commerce_service.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
+import 'package:desconto_direto_comercio_mobile/routing/routes.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
 import 'package:desconto_direto_comercio_mobile/ui/home/widgets/home_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class NavigationScreen extends StatefulWidget {
@@ -77,7 +79,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     }
 
     final bool hasValidImage =
-        _commerce!.fotoUrl != null && _commerce!.fotoUrl!.isNotEmpty;
+          _commerce!.fotoUrl != null && _commerce!.fotoUrl!.isNotEmpty;
 
     final Widget profilePicture = CircleAvatar(
       backgroundColor: AppColors.Yellow1,
@@ -105,7 +107,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
       ),
       currentAccountPicture: profilePicture,
       decoration: const BoxDecoration(color: AppColors.Blue1),
-
     );
   }
 
@@ -142,7 +143,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
     );
   }
 
-
   void _logout(BuildContext context) async {
     await _localStore.deleteToken();
 
@@ -177,9 +177,16 @@ class _NavigationScreenState extends State<NavigationScreen> {
         child: ListView(
           padding: EdgeInsets.zero,
           children: <Widget>[
-            _buildDrawerHeader(),
+            InkWell(
+              onTap: () {
+                Navigator.pop(context);
+                context.push(Routes.profile);
+              },
+              child: _buildDrawerHeader(),
+            ),
             ListTile(
-              leading: Icon(Symbols.add_notes, color: Colors.white),
+              leading: Icon(Icons.note_add
+                  , color: Colors.white),
               title: Text(
                 "Adicionar panfleto",
                 style: TextStyle(color: Colors.white),
@@ -190,7 +197,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Symbols.new_label, color: Colors.white),
+              leading: Icon(Icons.new_label, color: Colors.white),
               title: Text(
                 "Adicionar oferta",
                 style: TextStyle(color: Colors.white),
@@ -200,7 +207,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Symbols.add_shopping_cart, color: Colors.white),
+              leading: Icon(Icons.add_shopping_cart, color: Colors.white),
               title: Text(
                 "Adicionar produto",
                 style: TextStyle(color: Colors.white),
