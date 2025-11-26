@@ -7,4 +7,5 @@ abstract final class Routes {
   static const auth = '/auth';
   static const register = '/register';
   static const offer = '/offer';
+  static const offer1 = '/offer1';
 }
