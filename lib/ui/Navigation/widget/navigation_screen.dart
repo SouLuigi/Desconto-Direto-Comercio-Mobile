@@ -30,7 +30,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   void initState() {
     super.initState();
-    _token = "3";
+    _token = "2";
     _commerceService = CommerceService(_commerceRepository, _localStore);
     _fetchCommerce();
   }

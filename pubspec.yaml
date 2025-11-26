@@ -41,6 +41,7 @@ dependencies:
   flutter_secure_storage: ^9.0.0
   material_symbols_icons: ^4.2874.0
   file_picker: ^10.3.7
+  material_symbols_icons: ^4.2874.0
 
 
 
