@@ -48,7 +48,7 @@ class FlyerRepository {
     }
   }
 
-  Future<Flyer> getById(String id) async {
+  Future<Flyer> getById(int id) async {
     final uri = Uri.parse('$_baseUrl/panfletos/find/$id');
     final response = await http.get(
       uri,
@@ -86,7 +86,7 @@ class FlyerRepository {
     }
   }
 
-  Future<void> delete(String id) async {
+  Future<void> delete(int id) async {
     final uri = Uri.parse('$_baseUrl/panfletos/delete/$id');
     final response = await http.delete(
       uri,
@@ -99,7 +99,7 @@ class FlyerRepository {
     }
   }
 
-  Future<void> uploadImage(String id, File image) async {
+  Future<void> uploadImage(int id, File image) async {
     final baseUrl = ApiConfig.baseUrl;
     final uri = Uri.parse('$baseUrl/panfletos/upload-foto-comercio/$id');
     final request = http.MultipartRequest('POST', uri);
