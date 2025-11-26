@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../Navigation/widget/navigation_screen.dart';
 import '../viewmodel/flyer_viewmodel.dart';
 import 'flyer_item_widget.dart';
 import 'flyer_modal_widget.dart';
@@ -79,11 +80,12 @@ class _FlyersScreenState extends State<FlyersScreen> {
           },
         ),
       ),
+      bottomNavigationBar: const NavigationScreen(),
 
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.yellow.shade700,
         onPressed: () {
-          Navigator.pushNamed(context, "/flyer-create")
+          Navigator.pushNamed(context, "/create_flyers")
               .then((_) => vm.carregarFlyers());
         },
         child: const Icon(Icons.add, size: 32),
