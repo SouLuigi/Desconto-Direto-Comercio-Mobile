@@ -6,6 +6,9 @@ import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_textField.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_datepicker.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/view_models/offer_viewmodel.dart';
+
+import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/widget_campo_nao_editavel.dart';
+
 class OfferEditForm extends StatefulWidget {
   const OfferEditForm({super.key});
 
@@ -36,14 +39,14 @@ class _OfferEditFormState extends State<OfferEditForm> {
   Widget build(BuildContext context) {
     final vm = context.watch<OfferViewModel>();
     final offer = vm.selectedOffer!;
-    final product = offer.produto; // <- usando o campo correto
+    final product = offer.produto;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // -------------------------------------------------------
+        // --------------------------------------
         // IMAGEM
-        // -------------------------------------------------------
+        // --------------------------------------
         Container(
           width: double.infinity,
           height: 250,
@@ -65,29 +68,45 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
         const SizedBox(height: 25),
 
-        // -------------------------------------------------------
-        // CAMPOS NÃO EDITÁVEIS
-        // -------------------------------------------------------
-        campoNaoEditavel("Nome do Produto", product.nome),
+        // --------------------------------------
+        // CAMPOS NÃO EDITÁVEIS 
+        // --------------------------------------
+        CampoNaoEditavel(
+          label: "Nome do Produto",
+          value: product.nome,
+        ),
         const SizedBox(height: 15),
 
         Row(
           children: [
-            Expanded(child: campoNaoEditavel("Medida", product.medida)),
+            Expanded(
+              child: CampoNaoEditavel(
+                label: "Medida",
+                value: product.medida,
+              ),
+            ),
             const SizedBox(width: 15),
-            Expanded(child: campoNaoEditavel("Unidade", product.unidadeMedida)),
+            Expanded(
+              child: CampoNaoEditavel(
+                label: "Unidade",
+                value: product.unidadeMedida,
+              ),
+            ),
           ],
         ),
 
         const SizedBox(height: 15),
 
-        campoNaoEditavel("Categoria", product.categoria),
+        CampoNaoEditavel(
+          label: "Categoria",
+          value: product.categoria,
+        ),
 
         const SizedBox(height: 20),
 
-        // -------------------------------------------------------
-        // DATEPICKER EDITÁVEL
-        // -------------------------------------------------------
+        // --------------------------------------
+        // DATE PICKER EDITÁVEL
+        // --------------------------------------
         CustomDatePicker(
           label: "Validade da Oferta",
           controller: data,
@@ -99,9 +118,9 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
         const SizedBox(height: 10),
 
-        // -------------------------------------------------------
-        // PREÇO EDITÁVEL
-        // -------------------------------------------------------
+        // --------------------------------------
+        // PREÇO
+        // --------------------------------------
         CustomInput(
           label: "Preço",
           controller: preco,
@@ -111,9 +130,9 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
         const SizedBox(height: 30),
 
-        // -------------------------------------------------------
+        // --------------------------------------
         // BOTÃO SALVAR
-        // -------------------------------------------------------
+        // --------------------------------------
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -125,9 +144,9 @@ class _OfferEditFormState extends State<OfferEditForm> {
               ),
             ),
             onPressed: () async {
-              final updatedOffer = _buildUpdatedOffer(offer);
+              final updated = _buildUpdatedOffer(offer);
 
-              final ok = await vm.updateOffer(updatedOffer);
+              final ok = await vm.updateOffer(updated);
 
               if (ok && mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -135,7 +154,6 @@ class _OfferEditFormState extends State<OfferEditForm> {
                     content: Text("Oferta atualizada com sucesso!"),
                   ),
                 );
-
                 Navigator.pop(context);
               }
             },
@@ -144,50 +162,23 @@ class _OfferEditFormState extends State<OfferEditForm> {
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ),
-        )
+        ),
       ],
     );
   }
 
-  // -----------------------------------------------------------
-  // MONTA A NOVA OFERTA (Atualiza apenas data e preço)
-  // -----------------------------------------------------------
+  // ------------------------------------------
+  // MONTA A NOVA OFERTA
+  // ------------------------------------------
   Offer _buildUpdatedOffer(Offer old) {
     return Offer(
       id: old.id,
       comercioId: old.comercioId,
       dataPostagem: old.dataPostagem,
       likes: old.likes,
-      produto: old.produto, // <- CORRETO
-      preco: double.parse(preco.text),
+      produto: old.produto,
+      preco: double.parse(preco.text.replaceAll(',', '.')),
       validade: DateFormat("MM/dd/yyyy").parse(data.text),
-    );
-  }
-
-  // -----------------------------------------------------------
-  // CAMPO NÃO EDITÁVEL
-  // -----------------------------------------------------------
-  Widget campoNaoEditavel(String label, String value) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
-        const SizedBox(height: 5),
-        AbsorbPointer(
-          child: Opacity(
-            opacity: 0.75,
-            child: TextField(
-              enabled: false,
-              decoration: InputDecoration(
-                hintText: value,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
