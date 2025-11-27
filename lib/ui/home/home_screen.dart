@@ -66,12 +66,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (viewModel.offers.isEmpty) {
                         return const Center(child: Text('Nenhuma oferta disponível.'));
                       }
-                      return ListView.builder(
+                      return GridView.builder(
                         itemCount: viewModel.offers.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.7,
+                        ),
                         itemBuilder: (context, index){
                           final offer = viewModel.offers[index];
                           return Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 8.0),
+                              padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 5.0),
                             child: WidgetCardOffer(offer: offer),
                           );
                         },

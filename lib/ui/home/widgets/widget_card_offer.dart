@@ -23,16 +23,12 @@ class _WidgetCardOfferState extends State<WidgetCardOffer> {
     final offer = widget.offer;
 
     return SizedBox(
-      width: 150,
-      height: 240,
       child: Stack(
         children: [
-        
-          
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
-              side: const BorderSide(color: AppColors.Orange1, width: 1.5),
+              side: const BorderSide(color: AppColors.Orange1, width: 2.5),
             ),
             clipBehavior: Clip.antiAlias,
             child: Column(
@@ -53,18 +49,37 @@ class _WidgetCardOfferState extends State<WidgetCardOffer> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 4,
+                  ),
                   child: Text(
                     offer.produto.nome,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
+                    style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  child: Text(
-                    'Válido até: ${offer.validade.day}/${offer.validade.month}/${offer.validade.year}',
-                  ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Text(
+                        '${offer.produto.medida}${offer.produto.unidadeMedida}',
+                        style: TextStyle(fontSize: 10),
+                        textAlign: TextAlign.start,
+                      ),
+                    ),
+
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8,),
+                      child: Text(
+                        'Oferta válida até: ${offer.validade.day}/${offer.validade.month}',
+                        style: TextStyle(color: AppColors.Red1, fontSize: 10),
+                      ),
+                    ),
+                  ],
                 ),
                 Container(
                   decoration: BoxDecoration(
@@ -75,12 +90,20 @@ class _WidgetCardOfferState extends State<WidgetCardOffer> {
                     ),
                   ),
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 6,
+                    ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text('R\$ ${offer.preco.toStringAsFixed(2)}'),
+                        Text(
+                          'R\$ ${offer.preco.toStringAsFixed(2)}',
+                          style: const TextStyle(
+                            color: AppColors.White1,
+                            fontSize: 15,
+                          ),
+                        ),
                         GestureDetector(
                           onTap: () => setState(() {
                             showMenu = !showMenu;
@@ -98,102 +121,108 @@ class _WidgetCardOfferState extends State<WidgetCardOffer> {
             ),
           ),
 
-          // Botão editar
-          
           if (showMenu)
-            Positioned.fill(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.45),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // BOTÃO EDITAR
-                          GestureDetector(
-                            onTap: () {
-                              setState(() => showMenu = false);
-                              context.read<OfferViewModel>().selectOffer(widget.offer);
-                              context.push(Routes.offer_edit);
-                            },
-                            child: Container(
-                              width: 140,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              decoration: BoxDecoration(
-                                color: Colors.amber.shade600,
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: const Text(
-                                "Editar",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: AppColors.White1,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+            Padding(
+              padding: const EdgeInsets.all(6.0),
+              child: Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.45),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Stack(
+                    children: [
+                      Center(
+                        child: Column(
+                          spacing: 10,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // BOTÃO EDITAR
+                            GestureDetector(
+                              onTap: () {
+                                setState(() => showMenu = false);
+                                context.read<OfferViewModel>().selectOffer(
+                                  widget.offer,
+                                );
+                                context.push(Routes.offer_edit);
+                              },
+                              child: Container(
+                                width: 140,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.amber.shade600,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: const Text(
+                                  "Editar",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: AppColors.White1,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
+                            GestureDetector(
+                              onTap: () async {
+                                final vm = context.read<OfferViewModel>();
+                                final ok = await vm.deleteOffer(
+                                  widget.offer.id.toString(),
+                                );
 
-                          const SizedBox(height: 10),
+                                setState(() => showMenu = false);
 
-                          // BOTÃO EXCLUIR
-                          GestureDetector(
-                            onTap: () async {
-                              final vm = context.read<OfferViewModel>();
-                              final ok =
-                                  await vm.deleteOffer(widget.offer.id.toString());
-
-                              setState(() => showMenu = false);
-
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(ok
-                                      ? "Oferta excluída com sucesso!"
-                                      : "Erro ao excluir a oferta"),
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text(
+                                      ok
+                                          ? "Oferta excluída com sucesso!"
+                                          : "Erro ao excluir a oferta",
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: 140,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 12,
                                 ),
-                              );
-                            },
-                            child: Container(
-                              width: 140,
-                              padding: const EdgeInsets.symmetric(vertical: 12),
-                              decoration: BoxDecoration(
-                                color: Colors.red.shade700,
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                              child: const Text(
-                                "Excluir",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  color: AppColors.White1,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
+                                decoration: BoxDecoration(
+                                  color: Colors.red.shade700,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: const Text(
+                                  "Excluir",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: AppColors.White1,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                 
-                    Positioned(
-                      right: 10,
-                      bottom: 8,
-                      child: GestureDetector(
-                        onTap: () => setState(() => showMenu = !showMenu),
-                        child: const Icon(
-                          Icons.settings,
-                          color: AppColors.White1,
-                          size: 26,
+                          ],
                         ),
                       ),
-                    ),
-                  ],
+
+                      Positioned(
+                        right: 5,
+                        bottom: 5,
+                        child: GestureDetector(
+                          onTap: () => setState(() => showMenu = !showMenu),
+                          child: const Icon(
+                            Icons.settings,
+                            color: AppColors.White1,
+                            size: 26,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
