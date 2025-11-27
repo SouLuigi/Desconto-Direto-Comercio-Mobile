@@ -8,7 +8,7 @@ import '../../../data/repositories/offer_repository.dart';
 import '../../../data/repositories/product_repository.dart';
 import '../view_models/offer_viewmodel.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/product_model.dart';
-
+import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/widget_appbar_offer.dart';
 class OfferCreateScreen extends StatefulWidget {
   const OfferCreateScreen({super.key});
 
@@ -56,16 +56,9 @@ class _OfferCreateScreenState extends State<OfferCreateScreen> {
       child: Scaffold(
         backgroundColor: Colors.white,
 
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: const Color(0xFF003049),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-          ),
-       
-          centerTitle: true,
-        ),
+       appBar: const AppBarPadrao(
+  titulo: "Criar Oferta",
+),
 
         body: loading
             ? const Center(child: CircularProgressIndicator())

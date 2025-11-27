@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/view_models/offer_viewmodel.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_edit_form.dart';
-
+import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/widget_appbar_offer.dart';
 class OfferEditScreen extends StatelessWidget {
   const OfferEditScreen({super.key});
 
@@ -26,15 +26,9 @@ class OfferEditScreen extends StatelessWidget {
         backgroundColor: Colors.white,
 
         // 🔥 APPBAR COPIADO DA CREATE (IDÊNTICO)
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: const Color(0xFF003049),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            onPressed: () => Navigator.pop(context),
-          ),
-          centerTitle: true,
-        ),
+       appBar: const AppBarPadrao(
+  titulo: "Editar Oferta",
+),
 
         // BODY
         body: vm.isLoading
