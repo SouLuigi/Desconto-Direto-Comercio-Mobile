@@ -5,12 +5,12 @@ import 'package:provider/provider.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/product_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
 import '../view_models/offer_viewmodel.dart';
-
-// Widgets customizados
 import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_textField.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_dropdown.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_datepicker.dart';
 
+// NOVO IMPORT
+import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/widget_campo_nao_editavel.dart';
 
 class OfferCreateForm extends StatefulWidget {
   final List<Product> produtos;
@@ -87,25 +87,43 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
 
         const SizedBox(height: 25),
 
-        // ------------------ CAMPOS NÃO EDITÁVEIS ------------------
-        campoNaoEditavelCustom("Nome do Produto", nome),
-        const SizedBox(height: 20),
+        // ------------------ CAMPOS NÃO EDITÁVEIS (ATUALIZADOS) ------------------
+        if (produtoSelecionado != null) ...[
+          CampoNaoEditavel(
+            label: "Nome do Produto",
+            value: nome.text,
+          ),
+          const SizedBox(height: 20),
 
-        Row(
-          children: [
-            Expanded(child: campoNaoEditavelCustom("Medida", medida)),
-            const SizedBox(width: 15),
-            Expanded(child: campoNaoEditavelCustom("Unidade de Medida", unidade)),
-          ],
-        ),
+          Row(
+            children: [
+              Expanded(
+                child: CampoNaoEditavel(
+                  label: "Medida",
+                  value: medida.text,
+                ),
+              ),
+              const SizedBox(width: 15),
+              Expanded(
+                child: CampoNaoEditavel(
+                  label: "Unidade de Medida",
+                  value: unidade.text,
+                ),
+              ),
+            ],
+          ),
 
-        const SizedBox(height: 20),
+          const SizedBox(height: 20),
 
-        campoNaoEditavelCustom("Categoria do Produto", categoria),
+          CampoNaoEditavel(
+            label: "Categoria do Produto",
+            value: categoria.text,
+          ),
 
-        const SizedBox(height: 20),
+          const SizedBox(height: 20),
+        ],
 
-        // ------------------ DATA (CustomDatePicker) ------------------
+        // ------------------ DATA ------------------
         CustomDatePicker(
           label: "Data de Postagem",
           controller: data,
@@ -175,51 +193,8 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
       dataPostagem: DateTime.now(),
       comercioId: 1,
       likes: 0,
-      preco: double.parse(preco.text),
+      preco: double.parse(preco.text.replaceAll(',', '.')),
       produto: p,
-    );
-  }
-
-  /// Campo NÃO editável usando CustomInput + bloqueio
-  Widget campoNaoEditavelCustom(String label, TextEditingController controller) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _label(label),
-        AbsorbPointer(
-          child: Opacity(
-            opacity: 0.75,
-            child: CustomInput(
-              label: label,
-              controller: controller,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _label(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5),
-      child: Text(
-        text,
-        style: const TextStyle(fontSize: 13, color: Colors.grey),
-      ),
-    );
-  }
-
-  InputDecoration _dropdownDecoration() {
-    return InputDecoration(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFCDCDCD)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.orange, width: 2),
-        borderRadius: BorderRadius.circular(8),
-      ),
     );
   }
 }
