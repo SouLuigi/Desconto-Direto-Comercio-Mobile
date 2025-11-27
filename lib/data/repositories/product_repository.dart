@@ -101,7 +101,7 @@ class ProductRepository {
     final baseUrl = ApiConfig.baseUrl;
     final uri = Uri.parse('$baseUrl/produtos/upload-foto-produto/$id');
     final request = http.MultipartRequest('POST', uri);
-    final fileMultipart = await http.MultipartFile.fromPath('file', image.path);
+    final fileMultipart = await http.MultipartFile.fromPath('photo', image.path);
     request.files.add(fileMultipart);
     final streamedResponse = await request.send();
     final response = await http.Response.fromStream(streamedResponse);

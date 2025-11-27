@@ -1,3 +1,4 @@
+import 'package:desconto_direto_comercio_mobile/config/api_config.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/commerce_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/repositories/commerce_repository.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/commerce_service.dart';
@@ -30,9 +31,10 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   void initState() {
     super.initState();
-    _token = "3";
+    _token = "2";
     _commerceService = CommerceService(_commerceRepository, _localStore);
     _fetchCommerce();
+    _commerceRepository.verificarApi();
   }
 
   void _fetchCommerce() async {
@@ -40,6 +42,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
       final commerceData = await _commerceService.getCommerceById(_token);
       setState(() {
         _commerce = commerceData;
+
         _isLoading = false;
       });
     } catch (e) {
@@ -194,6 +197,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
               onTap: () {
                 Navigator.pop(context);
+                context.push(Routes.flyers_create);
               },
             ),
             ListTile(
@@ -204,6 +208,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
               onTap: () {
                 Navigator.pop(context);
+                context.push(Routes.offer);
               },
             ),
             ListTile(
@@ -238,7 +243,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // context.push(Routes.register);
+          context.push(Routes.flyers);
         },
         backgroundColor: AppColors.Yellow1,
         shape: const CircleBorder(),

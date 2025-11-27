@@ -58,10 +58,11 @@ class Commerce {
       cep: json['cep'] as String?,
       fazEntrega: json['fazEntrega'] as bool?,
       horarioAbertura: json['horarioAbertura'] != null
-          ? DateTime.parse(json['horarioAbertura'])
+          ? DateTime.parse("2025-01-01 ${json['horarioAbertura']}") // ✅ Adiciona data
           : null,
+
       horarioFechamento: json['horarioFechamento'] != null
-          ? DateTime.parse(json['horarioFechamento'])
+          ? DateTime.parse("2025-01-01 ${json['horarioFechamento']}") // ✅ Adiciona data
           : null,
       aberto: json['aberto'] as bool?,
       fotoUrl: json['fotoUrl'] as String?,
@@ -71,6 +72,7 @@ class Commerce {
   }
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'nome': nome,
       'categoria': categoria,
       'telefone': telefone,
@@ -82,12 +84,17 @@ class Commerce {
       'bairro': bairro,
       'cep': cep,
       'fazEntrega': fazEntrega,
-      'horarioAbertura': horarioAbertura?.toIso8601String(),
-      'horarioFechamento': horarioFechamento?.toIso8601String(),
+      'horarioAbertura': horarioAbertura != null ? _formatTime(horarioAbertura!) : null,
+      'horarioFechamento': horarioFechamento != null ? _formatTime(horarioFechamento!) : null,
       'aberto': aberto,
       'fotoUrl': fotoUrl,
       'offer': offer?.toJson(),
       'flyer': flyer?.toJson(),
     };
+  }
+  String _formatTime(DateTime dt) {
+    final hour = dt.hour.toString().padLeft(2, '0');
+    final minute = dt.minute.toString().padLeft(2, '0');
+    return "$hour:$minute:00";
   }
 }
