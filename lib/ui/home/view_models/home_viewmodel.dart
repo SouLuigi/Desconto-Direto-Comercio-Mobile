@@ -33,7 +33,7 @@ class HomeViewmodel extends ChangeNotifier {
     try {
       final fetchedOffer = await _service.getOffersByIdCommerce('2');
       print("Fetched Offer: ${fetchedOffer?.length}");
-      // _offers = fetchedOffer != null ? [fetchedOffer] : [];
+      _offers = fetchedOffer!;
       _errorMessage = null;
     } catch (e) {
       _errorMessage = "Erro ao carregar dados: $e";
