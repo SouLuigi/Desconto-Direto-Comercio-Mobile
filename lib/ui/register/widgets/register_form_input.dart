@@ -12,7 +12,7 @@ class RegisterFormInput extends StatelessWidget {
   final void Function(String?)? onChanged;
 
   const RegisterFormInput({
-    Key? key,
+    super.key,
     required this.name,
     required this.label,
     this.prefixIcon,
@@ -20,7 +20,7 @@ class RegisterFormInput extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

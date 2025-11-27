@@ -1,8 +1,6 @@
 import 'dart:io';
 
-import 'package:desconto_direto_comercio_mobile/data/model/flyer_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/product_model.dart';
-import 'package:desconto_direto_comercio_mobile/data/repositories/flyer_repository.dart';
 import 'package:desconto_direto_comercio_mobile/data/repositories/product_repository.dart';
 
 class ProductService {

@@ -9,13 +9,13 @@ class CustomTimePicker extends StatelessWidget {
   final String? Function(String?)? validator;
 
   const CustomTimePicker({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     required this.onTimeSelected,
     this.initialTime,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

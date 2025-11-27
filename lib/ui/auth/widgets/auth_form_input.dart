@@ -13,7 +13,7 @@ class AuthFormInput extends StatelessWidget {
   final void Function(String?)? onChanged;
 
   const AuthFormInput({
-    Key? key,
+    super.key,
     required this.name,
     required this.label,
     this.prefixIcon,
@@ -21,7 +21,7 @@ class AuthFormInput extends StatelessWidget {
     this.keyboardType = TextInputType.text,
     this.validator,
     this.onChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

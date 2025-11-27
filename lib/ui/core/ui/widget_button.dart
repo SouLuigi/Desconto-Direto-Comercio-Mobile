@@ -12,12 +12,12 @@ class WidgetButton extends StatelessWidget {
   final Color textColor;
 
   const WidgetButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onPressed,
     this.color = AppColors.Blue1,
     this.textColor = AppColors.White1,
-  }): super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -10,21 +10,21 @@ class CustomDropdown extends StatelessWidget {
   final IconData? icon;
 
   const CustomDropdown({
-    Key? key,
+    super.key,
     required this.label,
     required this.items,
     required this.onChanged,
     this.value,
     this.validator,
     this.icon,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: DropdownButtonFormField<String>(
-        value: value,
+        initialValue: value,
         items: items.map((String item) {
           return DropdownMenuItem<String>(
             value: item,

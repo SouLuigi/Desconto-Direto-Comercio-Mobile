@@ -1,5 +1,4 @@
 import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
-import 'package:desconto_direto_comercio_mobile/ui/profile/viewmodel/edit_profile_viewmodel.dart';
 import 'package:desconto_direto_comercio_mobile/ui/profile/widgets/edit_form.dart';
 import 'package:flutter/material.dart';
 
