@@ -243,7 +243,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push(Routes.flyers);
+          context.push(Routes.offer);
         },
         backgroundColor: AppColors.Yellow1,
         shape: const CircleBorder(),

@@ -10,9 +10,6 @@ class OfferEditScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final vm = context.watch<OfferViewModel>();
 
-    // ------------------------------------------
-    // 1. Offer NÃO selecionada → ERRO DE FLUXO
-    // ------------------------------------------
     if (vm.selectedOffer == null) {
       return const Scaffold(
         body: Center(
@@ -24,38 +21,43 @@ class OfferEditScreen extends StatelessWidget {
       );
     }
 
-    // ------------------------------------------
-    // 2. Tela principal
-    // ------------------------------------------
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Editar Oferta"),
-        backgroundColor: Colors.orange,
-        elevation: 2,
-      ),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
 
-      body: vm.isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: Colors.orange),
-            )
-          : SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: const OfferEditForm(),
-            ),
+        // 🔥 APPBAR COPIADO DA CREATE (IDÊNTICO)
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: const Color(0xFF003049),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
+          centerTitle: true,
+        ),
 
-      // ------------------------------------------
-      // 3. Loader global para UpdateOffer()
-      // ------------------------------------------
-      floatingActionButton: vm.isLoading
-          ? FloatingActionButton(
-              backgroundColor: Colors.orange,
-              onPressed: () {},
-              child: const CircularProgressIndicator(
-                strokeWidth: 3,
-                color: Colors.white,
+        // BODY
+        body: vm.isLoading
+            ? const Center(
+                child: CircularProgressIndicator(color: Colors.orange),
+              )
+            : SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: const OfferEditForm(),
               ),
-            )
-          : null,
+
+        // LOADING (opcional)
+        floatingActionButton: vm.isLoading
+            ? FloatingActionButton(
+                backgroundColor: Colors.orange,
+                onPressed: () {},
+                child: const CircularProgressIndicator(
+                  strokeWidth: 3,
+                  color: Colors.white,
+                ),
+              )
+            : null,
+      ),
     );
   }
 }

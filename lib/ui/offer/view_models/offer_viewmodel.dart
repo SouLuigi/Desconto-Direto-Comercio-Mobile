@@ -41,7 +41,7 @@ class OfferViewModel extends ChangeNotifier {
   }
 
   // ----------------------------
-  // GET OFFER BY ID  (ainda funciona caso precise)
+  // GET OFFER BY ID
   // ----------------------------
   Future<void> fetchOfferById(String id) async {
     try {
@@ -102,7 +102,7 @@ class OfferViewModel extends ChangeNotifier {
   }
 
   // ----------------------------
-  // DELETE OFFER
+  // DELETE OFFER (CORRIGIDO)
   // ----------------------------
   Future<bool> deleteOffer(String id) async {
     try {
@@ -110,6 +110,9 @@ class OfferViewModel extends ChangeNotifier {
       notifyListeners();
 
       await _service.deleteOffer(id);
+
+      // REMOVE LOCALMENTE DA LISTA
+      offers.removeWhere((o) => o.id.toString() == id);
 
       isLoading = false;
       notifyListeners();

@@ -6,7 +6,6 @@ import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_textField.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_datepicker.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/view_models/offer_viewmodel.dart';
-
 class OfferEditForm extends StatefulWidget {
   const OfferEditForm({super.key});
 
@@ -22,7 +21,6 @@ class _OfferEditFormState extends State<OfferEditForm> {
   void initState() {
     super.initState();
 
-    // Garante que o selectedOffer já existe antes de usar
     Future.microtask(() {
       final vm = context.read<OfferViewModel>();
       final offer = vm.selectedOffer!;
@@ -38,14 +36,14 @@ class _OfferEditFormState extends State<OfferEditForm> {
   Widget build(BuildContext context) {
     final vm = context.watch<OfferViewModel>();
     final offer = vm.selectedOffer!;
-    final product = offer.product;
+    final product = offer.produto; // <- usando o campo correto
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // -----------------------------------
-        // IMAGEM DO PRODUTO
-        // -----------------------------------
+        // -------------------------------------------------------
+        // IMAGEM
+        // -------------------------------------------------------
         Container(
           width: double.infinity,
           height: 250,
@@ -67,11 +65,12 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
         const SizedBox(height: 25),
 
-        // -----------------------------------
+        // -------------------------------------------------------
         // CAMPOS NÃO EDITÁVEIS
-        // -----------------------------------
+        // -------------------------------------------------------
         campoNaoEditavel("Nome do Produto", product.nome),
         const SizedBox(height: 15),
+
         Row(
           children: [
             Expanded(child: campoNaoEditavel("Medida", product.medida)),
@@ -79,14 +78,16 @@ class _OfferEditFormState extends State<OfferEditForm> {
             Expanded(child: campoNaoEditavel("Unidade", product.unidadeMedida)),
           ],
         ),
+
         const SizedBox(height: 15),
+
         campoNaoEditavel("Categoria", product.categoria),
 
         const SizedBox(height: 20),
 
-        // -----------------------------------
-        // DATE PICKER (EDITÁVEL)
-        // -----------------------------------
+        // -------------------------------------------------------
+        // DATEPICKER EDITÁVEL
+        // -------------------------------------------------------
         CustomDatePicker(
           label: "Validade da Oferta",
           controller: data,
@@ -98,9 +99,9 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
         const SizedBox(height: 10),
 
-        // -----------------------------------
-        // PREÇO (EDITÁVEL)
-        // -----------------------------------
+        // -------------------------------------------------------
+        // PREÇO EDITÁVEL
+        // -------------------------------------------------------
         CustomInput(
           label: "Preço",
           controller: preco,
@@ -110,9 +111,9 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
         const SizedBox(height: 30),
 
-        // -----------------------------------
-        // BOTÃO SALVAR ALTERAÇÃO
-        // -----------------------------------
+        // -------------------------------------------------------
+        // BOTÃO SALVAR
+        // -------------------------------------------------------
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -128,15 +129,14 @@ class _OfferEditFormState extends State<OfferEditForm> {
 
               final ok = await vm.updateOffer(updatedOffer);
 
-              if (ok) {
-                if (mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text("Oferta atualizada com sucesso!"),
-                    ),
-                  );
-                  Navigator.pop(context);
-                }
+              if (ok && mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("Oferta atualizada com sucesso!"),
+                  ),
+                );
+
+                Navigator.pop(context);
               }
             },
             child: const Text(
@@ -149,24 +149,24 @@ class _OfferEditFormState extends State<OfferEditForm> {
     );
   }
 
-  // ------------------------------------------------------------
-  // MONTA NOVA OFERTA (mantém tudo, atualiza preço e validade)
-  // ------------------------------------------------------------
+  // -----------------------------------------------------------
+  // MONTA A NOVA OFERTA (Atualiza apenas data e preço)
+  // -----------------------------------------------------------
   Offer _buildUpdatedOffer(Offer old) {
     return Offer(
       id: old.id,
       comercioId: old.comercioId,
       dataPostagem: old.dataPostagem,
       likes: old.likes,
-      product: old.product,
+      produto: old.produto, // <- CORRETO
       preco: double.parse(preco.text),
       validade: DateFormat("MM/dd/yyyy").parse(data.text),
     );
   }
 
-  // ------------------------------------------------------------
-  // WIDGET CAMPO NÃO EDITÁVEL
-  // ------------------------------------------------------------
+  // -----------------------------------------------------------
+  // CAMPO NÃO EDITÁVEL
+  // -----------------------------------------------------------
   Widget campoNaoEditavel(String label, String value) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

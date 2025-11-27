@@ -7,9 +7,11 @@ abstract final class Routes {
   static const auth = '/auth';
   static const register = '/register';
   static const offer = '/offer';
-  static const offer1 = '/offer1';
+  static const offer_edit = '/offer_edit';
   static const profile = '/profile';
   static const editProfile = '/edit-profile';
   static const flyers = '/flyers';
   static const flyers_create = '/create_flyers';
+  static const teste = '/teste';
 }
+
