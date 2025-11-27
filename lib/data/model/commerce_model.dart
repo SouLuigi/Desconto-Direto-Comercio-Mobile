@@ -19,8 +19,8 @@ class Commerce {
   final bool? aberto;
   final String? fotoUrl;
   final String? endereco;
-  final Offer? offer;
-  final Flyer? flyer;
+  final List<Offer>? ofertas;
+  final List<Flyer>? panfletos;
 
   Commerce({
     required this.id,
@@ -39,8 +39,8 @@ class Commerce {
     this.horarioFechamento,
     this.aberto,
     this.fotoUrl,
-    this.offer,
-    this.flyer,
+    this.ofertas,
+    this.panfletos,
     this.endereco,
   });
 
@@ -58,19 +58,26 @@ class Commerce {
       cep: json['cep'] as String?,
       fazEntrega: json['fazEntrega'] as bool?,
       horarioAbertura: json['horarioAbertura'] != null
-          ? DateTime.parse(json['horarioAbertura'])
+          ? DateTime.parse("2025-01-01 ${json['horarioAbertura']}")
           : null,
+
       horarioFechamento: json['horarioFechamento'] != null
-          ? DateTime.parse(json['horarioFechamento'])
+          ? DateTime.parse("2025-01-01 ${json['horarioFechamento']}")
           : null,
       aberto: json['aberto'] as bool?,
       fotoUrl: json['fotoUrl'] as String?,
-      offer: json['offer'] != null ? Offer.fromJson(json['offer']) : null,
-      flyer: json['flyer'] != null ? Flyer.fromJson(json['flyer']) : null,
+      ofertas: json['ofertas'] != null
+          ? (json['ofertas'] as List).map((i) => Offer.fromJson(i)).toList()
+          : [],
+
+      panfletos: json['panfletos'] != null
+          ? (json['panfletos'] as List).map((i) => Flyer.fromJson(i)).toList()
+          : [],
     );
   }
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'nome': nome,
       'categoria': categoria,
       'telefone': telefone,
@@ -82,12 +89,19 @@ class Commerce {
       'bairro': bairro,
       'cep': cep,
       'fazEntrega': fazEntrega,
-      'horarioAbertura': horarioAbertura?.toIso8601String(),
-      'horarioFechamento': horarioFechamento?.toIso8601String(),
+      'horarioAbertura': horarioAbertura != null ? _formatTime(horarioAbertura!) : null,
+      'horarioFechamento': horarioFechamento != null ? _formatTime(horarioFechamento!) : null,
       'aberto': aberto,
       'fotoUrl': fotoUrl,
-      'offer': offer?.toJson(),
-      'flyer': flyer?.toJson(),
+      'ofertas': ofertas?.map((e) => e.toJson()).toList(),
+      'panfletos': panfletos?.map((e) => e.toJson()).toList(),
     };
   }
+  String _formatTime(DateTime dt) {
+    final hour = dt.hour.toString().padLeft(2, '0');
+    final minute = dt.minute.toString().padLeft(2, '0');
+    return "$hour:$minute:00";
+  }
 }
+
+

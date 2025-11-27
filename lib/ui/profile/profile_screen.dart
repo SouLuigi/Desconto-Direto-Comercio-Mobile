@@ -6,6 +6,7 @@ import 'package:desconto_direto_comercio_mobile/ui/profile/widgets/info_widget.d
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -22,6 +23,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     viewModel.loadCommerce();
+  }
+
+  String formatarHora(DateTime data) {
+    String hora = data.hour.toString().padLeft(2, '0');
+    String min = data.minute.toString().padLeft(2, '0');
+    return '$hora:$min';
+  }
+
+  void _showImageSourceActionSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: <Widget>[
+              ListTile(
+                leading: const Icon(
+                  Symbols.photo_camera,
+                  color: AppColors.Blue1,
+                ),
+                title: const Text('Tirar foto'),
+                onTap: () {
+                  Navigator.pop(context); // Fecha o menu
+                  viewModel.pickImage(ImageSource.camera);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Symbols.image, color: AppColors.Blue1),
+                title: const Text('Escolher da galeria'),
+                onTap: () {
+                  Navigator.pop(context); // Fecha o menu
+                  viewModel.pickImage(ImageSource.gallery);
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _confirmarExclusao(BuildContext context) async {
@@ -81,7 +125,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white, // Fundo geral branco
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: AppColors.Blue1,
         title: const Text('Meu perfil', style: TextStyle(color: Colors.white)),
@@ -137,25 +181,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                 child: Row(
                   children: [
-                    CircleAvatar(
-                      radius: 40,
-                      backgroundColor: AppColors.Yellow1,
+                    Stack(
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _showImageSourceActionSheet(context);
+                          },
+                          child: CircleAvatar(
+                            radius: 40,
+                            backgroundColor: AppColors.Yellow1,
 
-                      backgroundImage: hasValidImage
-                          ? NetworkImage(commerce.fotoUrl!)
-                          : null,
-                      child: !hasValidImage
-                          ? Text(
-                              commerce.nome.isNotEmpty
-                                  ? commerce.nome[0].toUpperCase()
-                                  : '?',
-                              style: const TextStyle(
-                                fontSize: 20,
-                                color: AppColors.Blue1,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            )
-                          : null,
+                            backgroundImage: viewModel.selectedImageFile != null
+                                ? FileImage(viewModel.selectedImageFile!)
+                                      as ImageProvider
+                                : (hasValidImage
+                                      ? NetworkImage(commerce.fotoUrl!)
+                                      : null),
+                            child:
+                                (viewModel.selectedImageFile == null &&
+                                    !hasValidImage)
+                                ? Text(
+                                    commerce.nome.isNotEmpty
+                                        ? commerce.nome[0].toUpperCase()
+                                        : '?',
+                                    style: const TextStyle(
+                                      fontSize: 20,
+                                      color: AppColors.Blue1,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                : null,
+                          ),
+                        ),
+
+                        // Ícone de câmera sobreposto (Badge)
+                        Positioned(
+                          bottom: 0,
+                          right: 0,
+                          child: Container(
+                            height: 30,
+                            width: 30,
+                            decoration: BoxDecoration(
+                              color: AppColors.Blue1,
+                              shape: BoxShape.circle,
+                              border: Border.all(width: 2, color: Colors.white),
+                            ),
+                            child: const Icon(
+                              Symbols.photo_camera,
+                              color: Colors.white,
+                              size: 18,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                     const SizedBox(width: 15),
                     Expanded(
@@ -232,7 +310,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   InfoItemWidget(
                                     icon: Symbols.phone_android,
                                     label: 'Whatsapp',
-                                    value: commerce.cep ?? "Não informado",
+                                    value:
+                                        commerce.telefoneCelular ??
+                                        "Não informado",
                                   ),
                                   InfoItemWidget(
                                     icon: Symbols.account_box,
@@ -246,7 +326,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     value:
                                         (commerce.horarioAbertura != null &&
                                             commerce.horarioFechamento != null)
-                                        ? '${commerce.horarioAbertura} às ${commerce.horarioFechamento}'
+                                        ? '${formatarHora(commerce.horarioAbertura!)} às ${formatarHora(commerce.horarioFechamento!)}'
                                         : 'Não informado',
                                   ),
                                   InfoItemWidget(
@@ -258,8 +338,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   ),
                                   WidgetButton(
                                     text: 'Editar perfil',
-                                    onPressed: () =>
-                                        context.push(Routes.editProfile),
+                                    onPressed: () async {
+                                      await context.push(Routes.editProfile);
+                                      viewModel.loadCommerce();
+                                    },
+
                                     color: AppColors.Yellow1,
                                   ),
                                   WidgetButton(

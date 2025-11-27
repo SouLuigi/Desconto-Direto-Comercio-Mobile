@@ -52,7 +52,7 @@ class OfferService {
     );
     if (offer.comercioId <= 0 ||
         validityDate.isBefore(today) ||
-        offer.product == null|| offer.preco <= 0) {
+        offer.produto == null|| offer.preco <= 0) {
       throw Exception("Dados inválidos para cadastrar oferta!");
     }
 
@@ -74,7 +74,7 @@ class OfferService {
     );
     if (offer.comercioId <= 0 ||
         validityDate.isBefore(today) ||
-        offer.product == null || offer.preco <= 0) {
+        offer.produto == null || offer.preco <= 0) {
       throw Exception("Dados inválidos para cadastrar oferta!");
     }
     try {

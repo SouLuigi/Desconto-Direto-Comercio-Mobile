@@ -7,7 +7,7 @@ import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_sto
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 
-class ProfileViewModel extends ChangeNotifier {
+class EditProfileViewModel extends ChangeNotifier {
   final _repository = CommerceRepository();
   final _localStorage = LocalStorageService();
 
@@ -16,28 +16,58 @@ class ProfileViewModel extends ChangeNotifier {
     _localStorage,
   );
 
+  final List<String> _categories = const [
+    'Supermercado / Mercearia',
+    'Padaria / Confeitaria',
+    'Açougue',
+    'Peixaria',
+    'Lanchonete / Pastelaria',
+    'Pizzaria',
+    'Oficina Mecânica',
+    'Autopeças',
+    'Borracharia',
+    'Farmácia / Drogaria',
+    'Loja de Roupas / Boutique',
+    'Loja de Calçados',
+    'Salão de Beleza / Barbearia',
+    'Pet Shop',
+    'Papelaria / Utilidades',
+    'Eletrônicos / Informática',
+    'Móveis / Decoração',
+    'Materiais de Construção',
+    'Outros',
+  ];
+  final List<String> _delivery = const ['Sim', 'Não'];
+
   bool _isLoading = false;
   String? _errorMessage;
   Commerce? _commerce;
+  late final _token = _localStorage.getToken();
+  String token = '2';
+
   File? _selectedImageFile;
+  File? get selectedImageFile => _selectedImageFile;
+
   final ImagePicker _picker = ImagePicker();
 
-  // Getters
   bool get isLoading => _isLoading;
 
   String? get errorMessage => _errorMessage;
 
   Commerce? get commerce => _commerce;
 
-  File? get selectedImageFile => _selectedImageFile;
+  List<String> get categories => _categories;
 
-  String get token => '2';
+  List<String> get delivery => _delivery;
 
   Future<void> loadCommerce() async {
     _setLoading(true);
     try {
-      _commerce = await _service.getCommerceById(token);
+      _commerce = await _service.getCommerceById('2');
+      print(_commerce);
       _errorMessage = null;
+      _isLoading = false;
+      notifyListeners();
     } catch (e) {
       _errorMessage = "Erro ao carregar dados: $e";
       _commerce = null;
@@ -47,55 +77,21 @@ class ProfileViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> pickImage(ImageSource source) async {
+  Future<void> updateCommerce(Commerce commerce) async {
     try {
-      final XFile? pickedFile = await _picker.pickImage(
-        source: source,
-        imageQuality: 80,
-        maxWidth: 800,
-      );
-
-      if (pickedFile == null) return;
-
-      _selectedImageFile = File(pickedFile.path);
+      _setLoading(true);
+      _errorMessage = null;
       notifyListeners();
 
-      await _uploadImageLogic();
+      print("Enviando: ${commerce.toJson()}");
+
+      await _service.editCommerce(commerce);
     } catch (e) {
-      _errorMessage = "Erro ao selecionar imagem: $e";
-      _selectedImageFile = null;
+      print("Erro no update: $e");
+      _errorMessage = "Falha ao atualizar dados. Verifique sua conexão.";
+    } finally {
+      _setLoading(false);
       notifyListeners();
-    }
-  }
-
-  // Função interna para organizar o upload
-  Future<void> _uploadImageLogic() async {
-    if (_selectedImageFile == null) return;
-
-    _setLoading(true);
-    try {
-      await _service.uploadImageOfCommerce(token, _selectedImageFile!);
-
-      await loadCommerce();
-
-      _selectedImageFile = null;
-    } catch (e) {
-      _errorMessage = "Falha no upload da imagem: $e";
-      print(_errorMessage);
-    } finally {
-      _setLoading(false);
-    }
-  }
-
-  Future<void> deleteAccount() async {
-    _setLoading(true);
-    try {
-      await _service.deleteCommerce(token);
-    } catch (e) {
-      _errorMessage = "Erro ao deletar conta";
-      print(e);
-    } finally {
-      _setLoading(false);
     }
   }
 
