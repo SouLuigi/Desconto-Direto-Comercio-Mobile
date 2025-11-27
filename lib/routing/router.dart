@@ -2,8 +2,7 @@ import 'package:desconto_direto_comercio_mobile/ui/profile/edit-profile-screen.d
 import 'package:desconto_direto_comercio_mobile/ui/profile/profile_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyer_create_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyers_screen.dart';
-import 'package:desconto_direto_comercio_mobile/ui/flyers/viewmodel/flyer_create_page.dart';
-import 'package:desconto_direto_comercio_mobile/ui/flyers/viewmodel/flyer_page.dart';
+
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_create_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_edit_form.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_edit_screen.dart';

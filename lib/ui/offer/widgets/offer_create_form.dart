@@ -10,7 +10,7 @@ class OfferCreateForm extends StatefulWidget {
   const OfferCreateForm({
     super.key,
     required this.produtos,
-  });
+});
 
   @override
   State<OfferCreateForm> createState() => _OfferCreateFormState();

@@ -27,20 +27,28 @@ class _OfferCreateScreenState extends State<OfferCreateScreen> {
   }
 
   Future<void> carregarProdutos() async {
-    final productService = ProductService(ProductRepository());
+  final productService = ProductService(ProductRepository());
 
-    try {
-      final lista = await productService.getAllProduct(); 
-      
+  try {
+    final lista = await productService.getAllProduct(); 
 
-      setState(() {
-        produtos = lista;
-        loading = false;
-      });
-    } catch (e) {
-      setState(() => loading = false);
+    print(">>> PRODUTOS RECEBIDOS: ${lista.length}");
+
+    for (var p in lista) {
+      print(">>> Produto: ${p.nome} | Medida: ${p.medida} | Categoria: ${p.categoria}");
     }
+
+    setState(() {
+      produtos = lista;
+      loading = false;
+    });
+
+  } catch (e) {
+    print(">>> ERRO AO CARREGAR PRODUTOS: $e");
+    setState(() => loading = false);
   }
+}
+
 
   @override
   Widget build(BuildContext context) {
