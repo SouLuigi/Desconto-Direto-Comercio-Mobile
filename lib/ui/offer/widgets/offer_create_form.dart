@@ -176,7 +176,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
       comercioId: 1,
       likes: 0,
       preco: double.parse(preco.text),
-      product: p,
+      produto: p,
     );
   }
 

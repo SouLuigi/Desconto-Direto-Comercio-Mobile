@@ -32,7 +32,8 @@ class HomeViewmodel extends ChangeNotifier {
     _setLoading(true);
     try {
       final fetchedOffer = await _service.getOffersByIdCommerce('2');
-      _offers = fetchedOffer != null ? [fetchedOffer] : [];
+      print("Fetched Offer: ${fetchedOffer?.length}");
+      // _offers = fetchedOffer != null ? [fetchedOffer] : [];
       _errorMessage = null;
     } catch (e) {
       _errorMessage = "Erro ao carregar dados: $e";
@@ -41,6 +42,7 @@ class HomeViewmodel extends ChangeNotifier {
       _setLoading(false);
     }
   }
+
   void _setLoading(bool value) {
     _isLoading = value;
     notifyListeners();
