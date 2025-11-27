@@ -80,9 +80,9 @@ class _FlyersScreenState extends State<FlyersScreen> {
           },
         ),
       ),
-      bottomNavigationBar: const NavigationScreen(),
 
-      floatingActionButton: FloatingActionButton(
+
+      /*floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.yellow.shade700,
         onPressed: () {
           Navigator.pushNamed(context, "/create_flyers")
@@ -91,7 +91,7 @@ class _FlyersScreenState extends State<FlyersScreen> {
         child: const Icon(Icons.add, size: 32),
       ),
       floatingActionButtonLocation:
-      FloatingActionButtonLocation.centerDocked,
+      FloatingActionButtonLocation.centerDocked,*/
     );
   }
 }

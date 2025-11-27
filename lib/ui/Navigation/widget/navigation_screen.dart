@@ -4,10 +4,13 @@ import 'package:desconto_direto_comercio_mobile/data/services/commerce_service.d
 import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
 import 'package:desconto_direto_comercio_mobile/routing/routes.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
+import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyer_create_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/home/widgets/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+
+import '../../flyers/widgets/flyers_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
@@ -21,7 +24,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
   Commerce? _commerce;
   bool _isLoading = true;
 
-  static const List<Widget> _screens = <Widget>[HomeScreen()];
+  static const List<Widget> _screens = <Widget>[
+    HomeScreen(),
+    FlyersScreen(),
+  ];
+
   final _commerceRepository = CommerceRepository();
   final _localStore = LocalStorageService();
   late final String _token;
@@ -194,7 +201,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
               onTap: () {
                 Navigator.pop(context);
-              },
+                context.push('/create_flyers');
+              }
+              ,
             ),
             ListTile(
               leading: Icon(Icons.new_label, color: Colors.white),
@@ -238,7 +247,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // context.push(Routes.register);
+          context.push(Routes.register);
         },
         backgroundColor: AppColors.Yellow1,
         shape: const CircleBorder(),
