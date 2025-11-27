@@ -1,6 +1,6 @@
 import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyer_create_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyers_screen.dart';
-import 'package:desconto_direto_comercio_mobile/ui/home/widgets/teste.dart';
+
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_create_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_edit_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/profile/edit-profile-screen.dart';
@@ -76,12 +76,7 @@ final GoRouter appRouter = GoRouter(
       },
     ),
 
-    GoRoute(
-      path: Routes.teste,
-      builder: (BuildContext context, GoRouterState state) {
-        return const OfferTestPage();
-      },
-    ),
+   
 
     // Você pode adicionar rotas mais complexas aqui, se necessário.
   ],

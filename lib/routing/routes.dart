@@ -12,6 +12,6 @@ abstract final class Routes {
   static const editProfile = '/edit-profile';
   static const flyers = '/flyers';
   static const flyers_create = '/create_flyers';
-  static const teste = '/teste';
+  
 }
 
