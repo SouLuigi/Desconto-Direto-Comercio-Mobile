@@ -115,10 +115,6 @@ packages:
     version: "7.0.1"
   file_picker:
     dependency: "direct main"
-  file_selector_linux:
-    dependency: transitive
-  file_picker:
-    dependency: "direct main"
     description:
       name: file_picker
       sha256: "7872545770c277236fd32b022767576c562ba28366204ff1a5628853cf8f2200"
@@ -465,6 +461,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.16.0"
+  mime:
+    dependency: transitive
+    description:
+      name: mime
+      sha256: "41a20518f0cb1256669420fdba0cd90d21561e560ac240f26ef8322e45bb7ed6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   nested:
     dependency: transitive
     description:
@@ -473,14 +477,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  objective_c:
-    dependency: transitive
-    description:
-      name: objective_c
-      sha256: "1f81ed9e41909d44162d7ec8663b2c647c202317cc0b56d3d56f6a13146a0b64"
-      url: "https://pub.dev"
-    source: hosted
-    version: "9.1.0"
   path:
     dependency: transitive
     description:
@@ -517,10 +513,10 @@ packages:
     dependency: transitive
     description:
       name: path_provider_foundation
-      sha256: "6192e477f34018ef1ea790c56fffc7302e3bc3efede9e798b934c252c8c105ba"
+      sha256: "6d13aece7b3f5c5a9731eaf553ff9dcbc2eff41087fd2df587fd0fed9a3eb0c4"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.0"
+    version: "2.5.1"
   path_provider_linux:
     dependency: transitive
     description:
@@ -577,14 +573,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.5+1"
-  pub_semver:
-    dependency: transitive
-    description:
-      name: pub_semver
-      sha256: "5bfcf68ca79ef689f8990d1160781b4bad40a3bd5e5218ad4076ddb7f4081585"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.2.0"
   sky_engine:
     dependency: transitive
     description: flutter
