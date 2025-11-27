@@ -197,6 +197,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
               onTap: () {
                 Navigator.pop(context);
+                context.push(Routes.flyers_create);
               },
             ),
             ListTile(
@@ -207,6 +208,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
               onTap: () {
                 Navigator.pop(context);
+                context.push(Routes.offer);
               },
             ),
             ListTile(
@@ -241,7 +243,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // context.push(Routes.register);
+          context.push(Routes.flyers);
         },
         backgroundColor: AppColors.Yellow1,
         shape: const CircleBorder(),
