@@ -6,7 +6,7 @@ class Offer {
   final DateTime dataPostagem;
   final int comercioId;
   final int likes;
-  final Product product;
+  final Product produto;
   final double preco;
 
   Offer({
@@ -15,7 +15,7 @@ class Offer {
     required this.dataPostagem,
     required this.comercioId,
     required this.likes,
-    required this.product,
+    required this.produto,
     required this.preco
   });
 
@@ -26,7 +26,7 @@ class Offer {
       dataPostagem: DateTime.parse(json['dataPostagem'] as String),
       comercioId: json['comercioId'] as int,
       likes: json['likes'] as int,
-      product: Product.fromJson(json['product'] as Map<String, dynamic>),
+      produto: Product.fromJson(json['produto'] as Map<String, dynamic>),
       preco: (json['preco'] as num).toDouble(),
     );
   }
@@ -38,7 +38,7 @@ class Offer {
       'dataPostagem': dataPostagem.toIso8601String(),
       'comercioId': comercioId,
       'likes': likes,
-      'product': product.toJson(),
+      'produto': produto.toJson(),
       'preco': preco
     };
   }
