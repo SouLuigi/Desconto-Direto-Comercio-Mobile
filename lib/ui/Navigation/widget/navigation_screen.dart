@@ -27,6 +27,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   static const List<Widget> _screens = <Widget>[
     HomeScreen(),
     FlyersScreen(),
+    FlyerCreateScreen(),
   ];
 
   final _commerceRepository = CommerceRepository();
@@ -245,13 +246,46 @@ class _NavigationScreenState extends State<NavigationScreen> {
       ),
       body: IndexedStack(index: _selectedIndex, children: _screens),
 
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.push(Routes.register);
         },
         backgroundColor: AppColors.Yellow1,
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: AppColors.White1, size: 35),
+      ),*/
+
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.Yellow1,
+        shape: const CircleBorder(),
+        onPressed: () {
+          switch (_selectedIndex) {
+            case 0:
+              context.push('/offer-create');
+              break;
+
+            case 1:
+              _onItemTapped(2);
+              break;
+
+            default:
+              print("FAB sem ação para este index");
+          }
+        },
+        child: Icon(
+              () {
+            switch (_selectedIndex) {
+              case 0:
+                return Icons.local_offer;
+              case 1:
+                return Icons.note_add;
+              default:
+                return Icons.add;
+            }
+          }(),
+          color: AppColors.White1,
+          size: 35,
+        ),
       ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -275,7 +309,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 label: 'panfletos',
               ),
             ],
-            currentIndex: _selectedIndex,
+              currentIndex: _selectedIndex.clamp(0, 1),
             selectedItemColor: AppColors.Yellow1,
             unselectedItemColor: Colors.grey,
             selectedLabelStyle: const TextStyle(fontSize: 14),
