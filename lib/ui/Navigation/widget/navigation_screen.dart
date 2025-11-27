@@ -5,12 +5,12 @@ import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_sto
 import 'package:desconto_direto_comercio_mobile/routing/routes.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
 import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyer_create_screen.dart';
-import 'package:desconto_direto_comercio_mobile/ui/home/widgets/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import '../../flyers/widgets/flyers_screen.dart';
+import '../../home/home_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
