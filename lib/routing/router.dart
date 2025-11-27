@@ -16,12 +16,12 @@ final GoRouter appRouter = GoRouter(
   initialLocation: Routes.primary,
   debugLogDiagnostics: true,
   routes: <RouteBase>[
-    GoRoute(
+    /*GoRoute(
       path: Routes.primary,
       builder: (BuildContext context, GoRouterState state) {
         return const NavigationScreen();
       },
-    ),
+    ),*/
 
     GoRoute(
       path: Routes.auth,
@@ -36,7 +36,7 @@ final GoRouter appRouter = GoRouter(
         return const RegisterScreen();
       },
     ),
-    GoRoute(
+    /*GoRoute(
       path: Routes.flyers,
       builder: (BuildContext context, GoRouterState state) {
         return const FlyersScreen();
@@ -47,7 +47,7 @@ final GoRouter appRouter = GoRouter(
       builder: (BuildContext context, GoRouterState state) {
         return const FlyerCreateScreen();
       },
-    ),
+    ),*/
 
     GoRoute(
       path: Routes.profile,

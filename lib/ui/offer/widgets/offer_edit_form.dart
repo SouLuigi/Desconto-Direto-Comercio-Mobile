@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+
+import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
+import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_textField.dart';
+import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_datepicker.dart';
+import 'package:desconto_direto_comercio_mobile/ui/offer/view_models/offer_viewmodel.dart';
 
 class OfferEditForm extends StatefulWidget {
   const OfferEditForm({super.key});
@@ -9,24 +15,37 @@ class OfferEditForm extends StatefulWidget {
 }
 
 class _OfferEditFormState extends State<OfferEditForm> {
-  // VALORES FAKES PARA TESTE
-  final String nomeProduto = "Veja Limpa Piso Max";
-  final String medidaProduto = "500";
-  final String unidadeProduto = "ML";
-  final String categoriaProduto = "Limpeza";
-  final String imagemProduto =
-      "https://static.paodeacucar.com/media/uploads/produtos/7891035612702_1.jpg";
+  final preco = TextEditingController();
+  final data = TextEditingController();
 
-  // CAMPOS EDITÁVEIS
-  final data = TextEditingController(text: "12/31/2025");
-  final preco = TextEditingController(text: "8.90");
+  @override
+  void initState() {
+    super.initState();
+
+    // Garante que o selectedOffer já existe antes de usar
+    Future.microtask(() {
+      final vm = context.read<OfferViewModel>();
+      final offer = vm.selectedOffer!;
+
+      preco.text = offer.preco.toStringAsFixed(2);
+      data.text = DateFormat("MM/dd/yyyy").format(offer.validade);
+
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<OfferViewModel>();
+    final offer = vm.selectedOffer!;
+    final product = offer.product;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ------------------ IMAGEM ------------------
+        // -----------------------------------
+        // IMAGEM DO PRODUTO
+        // -----------------------------------
         Container(
           width: double.infinity,
           height: 250,
@@ -35,151 +54,140 @@ class _OfferEditFormState extends State<OfferEditForm> {
             borderRadius: BorderRadius.circular(12),
           ),
           alignment: Alignment.center,
-          child: Image.network(
-            imagemProduto,
-            height: 200,
-            fit: BoxFit.contain,
-            errorBuilder: (_, __, ___) =>
-                const Icon(Icons.broken_image, size: 80),
-          ),
+          child: (product.fotoUrl.isEmpty)
+              ? const Icon(Icons.broken_image, size: 80)
+              : Image.network(
+                  product.fotoUrl,
+                  height: 200,
+                  fit: BoxFit.contain,
+                  errorBuilder: (_, __, ___) =>
+                      const Icon(Icons.broken_image, size: 80),
+                ),
         ),
 
         const SizedBox(height: 25),
 
-        // ------------------ CAMPOS  ------------------
-        _label("Nome do Produto"),
-        _campoNaoEditavel(nomeProduto),
-
-        const SizedBox(height: 20),
-
+        // -----------------------------------
+        // CAMPOS NÃO EDITÁVEIS
+        // -----------------------------------
+        campoNaoEditavel("Nome do Produto", product.nome),
+        const SizedBox(height: 15),
         Row(
           children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _label("Medida"),
-                  _campoNaoEditavel(medidaProduto),
-                ],
-              ),
-            ),
+            Expanded(child: campoNaoEditavel("Medida", product.medida)),
             const SizedBox(width: 15),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _label("Unidade"),
-                  _campoNaoEditavel(unidadeProduto),
-                ],
-              ),
-            ),
+            Expanded(child: campoNaoEditavel("Unidade", product.unidadeMedida)),
           ],
         ),
+        const SizedBox(height: 15),
+        campoNaoEditavel("Categoria", product.categoria),
 
         const SizedBox(height: 20),
 
-        _label("Categoria do Produto"),
-        _campoNaoEditavel(categoriaProduto),
-
-        const SizedBox(height: 20),
-
-       
-        _label("Data de Validade"),
-        TextField(
+        // -----------------------------------
+        // DATE PICKER (EDITÁVEL)
+        // -----------------------------------
+        CustomDatePicker(
+          label: "Validade da Oferta",
           controller: data,
-          readOnly: true,
-          decoration: _decoration().copyWith(
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.calendar_month, color: Colors.orange),
-              onPressed: () async {
-                final selected = await showDatePicker(
-                  context: context,
-                  initialDate: DateTime.now(),
-                  firstDate: DateTime(2020),
-                  lastDate: DateTime(2040),
-                );
-
-                if (selected != null) {
-                  data.text = DateFormat("MM/dd/yyyy").format(selected);
-                }
-              },
-            ),
-          ),
+          initialDate: offer.validade,
+          onDateSelected: (picked) {
+            data.text = DateFormat("MM/dd/yyyy").format(picked);
+          },
         ),
 
-        const SizedBox(height: 20),
+        const SizedBox(height: 10),
 
-        _label("Preço"),
-        TextField(
+        // -----------------------------------
+        // PREÇO (EDITÁVEL)
+        // -----------------------------------
+        CustomInput(
+          label: "Preço",
           controller: preco,
           keyboardType: TextInputType.number,
-          decoration: _decoration(),
+          icon: Icons.attach_money,
         ),
 
         const SizedBox(height: 30),
 
+        // -----------------------------------
+        // BOTÃO SALVAR ALTERAÇÃO
+        // -----------------------------------
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange,
+              padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
               ),
-              padding: const EdgeInsets.symmetric(vertical: 16),
             ),
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Oferta atualizada! (fake)")),
-              );
+            onPressed: () async {
+              final updatedOffer = _buildUpdatedOffer(offer);
+
+              final ok = await vm.updateOffer(updatedOffer);
+
+              if (ok) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Oferta atualizada com sucesso!"),
+                    ),
+                  );
+                  Navigator.pop(context);
+                }
+              }
             },
             child: const Text(
-              "Atualizar",
+              "Salvar Alterações",
               style: TextStyle(fontSize: 18, color: Colors.white),
             ),
           ),
-        ),
+        )
       ],
     );
   }
 
-  // ---------------- HELPERS ----------------------
-
-  Widget _campoNaoEditavel(String valor) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-      decoration: BoxDecoration(
-        border: Border.all(color: Color(0xFFCDCDCD)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Text(
-        valor,
-        style: const TextStyle(fontSize: 16),
-      ),
+  // ------------------------------------------------------------
+  // MONTA NOVA OFERTA (mantém tudo, atualiza preço e validade)
+  // ------------------------------------------------------------
+  Offer _buildUpdatedOffer(Offer old) {
+    return Offer(
+      id: old.id,
+      comercioId: old.comercioId,
+      dataPostagem: old.dataPostagem,
+      likes: old.likes,
+      product: old.product,
+      preco: double.parse(preco.text),
+      validade: DateFormat("MM/dd/yyyy").parse(data.text),
     );
   }
 
-  Widget _label(String text) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 5),
-      child: Text(text,
-        style: const TextStyle(fontSize: 13, color: Colors.grey),
-      ),
-    );
-  }
-
-  InputDecoration _decoration() {
-    return InputDecoration(
-      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      enabledBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Color(0xFFCDCDCD)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: const BorderSide(color: Colors.orange, width: 2),
-        borderRadius: BorderRadius.circular(8),
-      ),
+  // ------------------------------------------------------------
+  // WIDGET CAMPO NÃO EDITÁVEL
+  // ------------------------------------------------------------
+  Widget campoNaoEditavel(String label, String value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+        const SizedBox(height: 5),
+        AbsorbPointer(
+          child: Opacity(
+            opacity: 0.75,
+            child: TextField(
+              enabled: false,
+              decoration: InputDecoration(
+                hintText: value,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

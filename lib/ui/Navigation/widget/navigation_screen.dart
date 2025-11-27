@@ -1,4 +1,4 @@
-import 'package:desconto_direto_comercio_mobile/config/api_config.dart';
+/*import 'package:desconto_direto_comercio_mobile/config/api_config.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/commerce_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/repositories/commerce_repository.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/commerce_service.dart';
@@ -283,4 +283,4 @@ class _NavigationScreenState extends State<NavigationScreen> {
       ),
     );
   }
-}
+}*/
