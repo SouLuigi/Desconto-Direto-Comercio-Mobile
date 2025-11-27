@@ -27,9 +27,8 @@ class _WidgetCardOfferState extends State<WidgetCardOffer> {
       height: 240,
       child: Stack(
         children: [
-          // ===========================
-          // CARD ORIGINAL (NÃO MEXER)
-          // ===========================
+        
+          
           Card(
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10.0),
