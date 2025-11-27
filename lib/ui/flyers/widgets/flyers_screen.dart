@@ -1,4 +1,4 @@
-/*import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import '../../Navigation/widget/navigation_screen.dart';
 import '../viewmodel/flyer_viewmodel.dart';
 import 'flyer_item_widget.dart';
@@ -94,4 +94,4 @@ class _FlyersScreenState extends State<FlyersScreen> {
       FloatingActionButtonLocation.centerDocked,
     );
   }
-}*/
+}
