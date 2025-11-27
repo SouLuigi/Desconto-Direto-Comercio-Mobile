@@ -28,7 +28,7 @@ class _WidgetCardOfferState extends State<WidgetCardOffer> {
           children: [
             Expanded(
               child: Image.network(
-                offer.product.fotoUrl,
+                offer.produto.fotoUrl,
                 fit: BoxFit.cover,
                 loadingBuilder: (context, child, loadingProgress) {
                   if (loadingProgress == null) return child;
@@ -52,7 +52,7 @@ class _WidgetCardOfferState extends State<WidgetCardOffer> {
                 vertical: 4.0,
               ),
               child: Text(
-                offer.product.nome.toString(),
+                offer.produto.nome.toString(),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

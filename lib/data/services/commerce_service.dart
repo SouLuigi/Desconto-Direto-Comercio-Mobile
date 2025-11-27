@@ -63,19 +63,19 @@ class CommerceService {
     }
   }
 
-  Future<Offer?> getOffersByIdCommerce(String id) async {
+  Future<List<Offer>?> getOffersByIdCommerce(String id) async {
     try {
       final jsonResponse = await _repository.getById(id);
-      return jsonResponse.offer;
+      return jsonResponse.ofertas;
     } catch (e) {
       rethrow;
     }
   }
 
-  Future<Flyer?> getFlyersByIdCommerce(String id) async {
+  Future<List<Flyer>?> getFlyersByIdCommerce(String id) async {
     try {
       final jsonResponse = await _repository.getById(id);
-      return jsonResponse.flyer;
+      return jsonResponse.panfletos;
     } catch (e) {
       rethrow;
     }
