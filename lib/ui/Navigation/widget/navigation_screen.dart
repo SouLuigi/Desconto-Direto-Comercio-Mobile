@@ -1,14 +1,16 @@
-import 'package:desconto_direto_comercio_mobile/config/api_config.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/commerce_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/repositories/commerce_repository.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/commerce_service.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
 import 'package:desconto_direto_comercio_mobile/routing/routes.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
-import 'package:desconto_direto_comercio_mobile/ui/home/home_screen.dart';
+import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyer_create_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
+
+import '../../flyers/widgets/flyers_screen.dart';
+import '../../home/home_screen.dart';
 
 class NavigationScreen extends StatefulWidget {
   const NavigationScreen({super.key});
@@ -22,7 +24,11 @@ class _NavigationScreenState extends State<NavigationScreen> {
   Commerce? _commerce;
   bool _isLoading = true;
 
-  static const List<Widget> _screens = <Widget>[HomeScreen()];
+  static const List<Widget> _screens = <Widget>[
+    HomeScreen(),
+    FlyersScreen(),
+  ];
+
   final _commerceRepository = CommerceRepository();
   final _localStore = LocalStorageService();
   late final String _token;
@@ -34,7 +40,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
     _token = "2";
     _commerceService = CommerceService(_commerceRepository, _localStore);
     _fetchCommerce();
-    _commerceRepository.verificarApi();
   }
 
   void _fetchCommerce() async {
@@ -42,7 +47,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
       final commerceData = await _commerceService.getCommerceById(_token);
       setState(() {
         _commerce = commerceData;
-
         _isLoading = false;
       });
     } catch (e) {
@@ -197,8 +201,9 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
               onTap: () {
                 Navigator.pop(context);
-                context.push(Routes.flyers_create);
-              },
+                context.push('/create_flyers');
+              }
+              ,
             ),
             ListTile(
               leading: Icon(Icons.new_label, color: Colors.white),
@@ -208,7 +213,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
               ),
               onTap: () {
                 Navigator.pop(context);
-                context.push(Routes.offer);
               },
             ),
             ListTile(
@@ -241,13 +245,52 @@ class _NavigationScreenState extends State<NavigationScreen> {
       ),
       body: IndexedStack(index: _selectedIndex, children: _screens),
 
-      floatingActionButton: FloatingActionButton(
+      /*floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.push(Routes.offer);
+          context.push(Routes.register);
         },
         backgroundColor: AppColors.Yellow1,
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: AppColors.White1, size: 35),
+      ),*/
+
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.Yellow1,
+        shape: const CircleBorder(),
+        onPressed: () async {
+          switch (_selectedIndex) {
+            case 0:
+              context.push('/offer-create');
+              break;
+
+            case 1:
+              final result = await context.push('/create_flyers');
+
+              if (result == true) {
+                setState(() => _selectedIndex = 1);
+                FlyersScreen.refreshFlyers();
+              }
+
+              break;
+
+            default:
+              print("FAB sem ação para este index");
+          }
+        },
+        child: Icon(
+              () {
+            switch (_selectedIndex) {
+              case 0:
+                return Icons.local_offer;
+              case 1:
+                return Icons.note_add;
+              default:
+                return Icons.add;
+            }
+          }(),
+          color: AppColors.White1,
+          size: 35,
+        ),
       ),
 
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
@@ -271,7 +314,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 label: 'panfletos',
               ),
             ],
-            currentIndex: _selectedIndex,
+              currentIndex: _selectedIndex.clamp(0, 1),
             selectedItemColor: AppColors.Yellow1,
             unselectedItemColor: Colors.grey,
             selectedLabelStyle: const TextStyle(fontSize: 14),

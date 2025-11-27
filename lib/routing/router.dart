@@ -43,7 +43,7 @@ final GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
-      path: Routes.flyers_create,
+      path: Routes.flyerscreate,
       builder: (BuildContext context, GoRouterState state) {
         return const FlyerCreateScreen();
       },

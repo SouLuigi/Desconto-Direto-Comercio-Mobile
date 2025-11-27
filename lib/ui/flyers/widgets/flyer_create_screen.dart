@@ -8,6 +8,8 @@ import '../widgets/flyer_image_picker_widget.dart';
 class FlyerCreateScreen extends StatefulWidget {
   const FlyerCreateScreen({super.key});
 
+
+
   @override
   State<FlyerCreateScreen> createState() => _FlyerCreateScreenState();
 }
@@ -65,7 +67,8 @@ class _FlyerCreateScreenState extends State<FlyerCreateScreen> {
                         ? null
                         : () async {
                       final ok = await vm.salvarFlyer();
-                      if (ok && mounted) Navigator.pop(context);
+                      if (ok && mounted)Navigator.pop(context, true);
+
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
@@ -85,7 +88,7 @@ class _FlyerCreateScreenState extends State<FlyerCreateScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: const NavigationScreen(),
+
     );
   }
 }
