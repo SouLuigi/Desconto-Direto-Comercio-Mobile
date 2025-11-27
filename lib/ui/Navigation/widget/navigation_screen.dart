@@ -27,7 +27,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
   static const List<Widget> _screens = <Widget>[
     HomeScreen(),
     FlyersScreen(),
-    FlyerCreateScreen(),
   ];
 
   final _commerceRepository = CommerceRepository();
@@ -38,7 +37,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   void initState() {
     super.initState();
-    _token = "3";
+    _token = "2";
     _commerceService = CommerceService(_commerceRepository, _localStore);
     _fetchCommerce();
   }
@@ -258,14 +257,20 @@ class _NavigationScreenState extends State<NavigationScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.Yellow1,
         shape: const CircleBorder(),
-        onPressed: () {
+        onPressed: () async {
           switch (_selectedIndex) {
             case 0:
               context.push('/offer-create');
               break;
 
             case 1:
-              _onItemTapped(2);
+              final result = await context.push('/create_flyers');
+
+              if (result == true) {
+                setState(() => _selectedIndex = 1);
+                FlyersScreen.refreshFlyers();
+              }
+
               break;
 
             default:

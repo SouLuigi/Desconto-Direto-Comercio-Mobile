@@ -16,7 +16,7 @@ class Flyer {
       id: json['id'] as int,
       fotoUrl: json['fotoUrl'] as String,
       dataExpiracao: DateTime.parse(json['dataExpiracao'] as String),
-      comercioId: json['comercioId'] as int,
+      comercioId: json['comercioId'] ?? 0,
     );
   }
 

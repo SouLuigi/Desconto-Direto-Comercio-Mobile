@@ -7,8 +7,17 @@ import 'flyer_modal_widget.dart';
 class FlyersScreen extends StatefulWidget {
   const FlyersScreen({super.key});
 
+  static _FlyersScreenState? _instance;
+
+  static void refreshFlyers() {
+    _instance?.carregarNovamente();
+  }
+
   @override
-  State<FlyersScreen> createState() => _FlyersScreenState();
+  State<FlyersScreen> createState() {
+    _instance = _FlyersScreenState();
+    return _instance!;
+  }
 }
 
 class _FlyersScreenState extends State<FlyersScreen> {
@@ -17,6 +26,10 @@ class _FlyersScreenState extends State<FlyersScreen> {
   @override
   void initState() {
     super.initState();
+    vm.carregarFlyers();
+  }
+
+  void carregarNovamente() {
     vm.carregarFlyers();
   }
 
