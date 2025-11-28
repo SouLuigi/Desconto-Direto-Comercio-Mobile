@@ -3,6 +3,7 @@ import 'package:desconto_direto_comercio_mobile/data/repositories/commerce_repos
 import 'package:desconto_direto_comercio_mobile/data/services/commerce_service.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
 import 'package:desconto_direto_comercio_mobile/routing/routes.dart';
+import 'package:desconto_direto_comercio_mobile/ui/auth/widgets/auth_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -148,17 +149,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   void _logout(BuildContext context) async {
     await _localStore.deleteToken();
+    context.push(Routes.auth);
 
-    if (context.mounted) {
-      // Navigator.of(context).pushAndRemoveUntil(
-      //   MaterialPageRoute(builder: (context) => LoginScreen()),
-      //   (Route<dynamic> route) => false,
-      // );
-
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text('Saindo...')));
-    }
   }
 
   @override

@@ -9,8 +9,7 @@ class LocalStorageService {
   }
 
   Future<String?> getToken() async {
-return '6';
-     // return await _storage.read(key: _tokenKey);
+    return await _storage.read(key: _tokenKey);
   }
 
   Future<void> deleteToken() async {
