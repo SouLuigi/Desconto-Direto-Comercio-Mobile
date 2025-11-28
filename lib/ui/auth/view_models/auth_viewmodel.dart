@@ -8,11 +8,11 @@ import '../../../data/services/flutter_secure_storage.dart';
 class AuthViewModel extends ChangeNotifier {
   late final LocalStorageService _localStorageService;
   late final CommerceRepository _commerceRepository;
+  AuthViewModel(this._localStorageService, this._commerceRepository);
   late final CommerceService _service = CommerceService(
     _commerceRepository,
     _localStorageService,
   );
-
   bool _isLoading = false;
   String? _errorMessage;
   late final String? _token;
@@ -26,7 +26,7 @@ class AuthViewModel extends ChangeNotifier {
 
   Commerce? get currentCommerce => _currentCommerce;
 
-  AuthViewModel(this._localStorageService, this._commerceRepository);
+
 
   Future<void> checkAuthenticationStatus() async {
      _token = await _localStorageService.getToken();
