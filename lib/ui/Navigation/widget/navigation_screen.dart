@@ -27,7 +27,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   final _commerceRepository = CommerceRepository();
   final _localStore = LocalStorageService();
-  late final String? _token;
+  String? _token;
   late final CommerceService _commerceService;
 
   @override

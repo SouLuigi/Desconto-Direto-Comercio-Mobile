@@ -42,7 +42,7 @@ class EditProfileViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   Commerce? _commerce;
-  late final String? _token;
+  String? _token;
 
 
   File? _selectedImageFile;
