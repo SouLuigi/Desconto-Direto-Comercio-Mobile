@@ -49,7 +49,10 @@ class AuthForm extends StatelessWidget {
                   name: 'senha',
                   label: 'Senha',
                   obscureText: true,
-                  validator: FormBuilderValidators.password(minLength: 4),
+                  validator: FormBuilderValidators.compose([
+                    FormBuilderValidators.required(),
+                    FormBuilderValidators.minLength(6),
+                  ]),
                 ),
                 Column(
                   spacing: 15,
@@ -69,12 +72,18 @@ class AuthForm extends StatelessWidget {
                       text: isLoading ? 'Entrando...' : 'Entrar',
                       onPressed: isLoading
                           ? null
-                          : () {
+                          : () async {
                         if (formKey.currentState?.saveAndValidate() ?? false) {
+
                           final email = formKey.currentState?.value['email'] as String;
                           final senha = formKey.currentState?.value['senha'] as String;
 
-                          authViewModel.login(email: email, password: senha);
+                          await authViewModel.login(email: email, password: senha);
+
+                          if (authViewModel.errorMessage == null &&
+                              authViewModel.isAuthenticated) {
+                            context.push(Routes.primary);
+                          }
                         }
                       },
                       ),

@@ -1,6 +1,5 @@
 import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
 import 'package:desconto_direto_comercio_mobile/ui/home/widgets/widget_card_offer.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
@@ -15,8 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final String _commerceId = '2';
-
   @override
   void initState() {
     super.initState();

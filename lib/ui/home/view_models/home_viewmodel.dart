@@ -18,7 +18,7 @@ class HomeViewmodel extends ChangeNotifier {
   String? _errorMessage;
   bool _isLoading = false;
   Commerce? _commerce;
-  late final token = _localStorage.getToken();
+  late final String _token;
 
   List<Offer> get offers => _offers;
 
@@ -30,8 +30,9 @@ class HomeViewmodel extends ChangeNotifier {
 
   Future<void> loadOffers() async {
     _setLoading(true);
+    _token = await _localStorage.getToken();
     try {
-      final fetchedOffer = await _service.getOffersByIdCommerce('2');
+      final fetchedOffer = await _service.getOffersByIdCommerce(_token);
       print("Fetched Offer: ${fetchedOffer?.length}");
       _offers = fetchedOffer!;
       _errorMessage = null;
