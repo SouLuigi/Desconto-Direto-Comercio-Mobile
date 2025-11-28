@@ -1,12 +1,15 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../Navigation/widget/navigation_screen.dart';
+import '../../core/ui/widget_datepicker.dart';
 import '../viewmodel/flyer_create_viewmodel.dart';
 import '../widgets/flyer_expiration_field_widget.dart';
 import '../widgets/flyer_image_picker_widget.dart';
 
 class FlyerCreateScreen extends StatefulWidget {
   const FlyerCreateScreen({super.key});
+
+
 
   @override
   State<FlyerCreateScreen> createState() => _FlyerCreateScreenState();
@@ -33,6 +36,19 @@ class _FlyerCreateScreenState extends State<FlyerCreateScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color(0xFF003049),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context, true),
+        ),
+        title: const Text(
+          "Cadastrar Panfleto",
+          style: TextStyle(color: Colors.white),
+        ),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.all(20),
@@ -50,9 +66,25 @@ class _FlyerCreateScreenState extends State<FlyerCreateScreen> {
 
               const SizedBox(height: 30),
 
-              FlyerExpirationFieldWidget(
+              CustomDatePicker(
+                label: "Data de Expiração",
                 controller: dataCtrl,
-                onTap: _selecionarData,
+
+                // Data inicial = a data já selecionada no ViewModel (se existir)
+                initialDate: vm.dataExpiracao ?? DateTime.now(),
+
+                // Callback que atualiza o ViewModel
+                onDateSelected: (data) {
+                  vm.selecionarData(data);
+                },
+
+                // Validação opcional
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return "Selecione uma data";
+                  }
+                  return null;
+                },
               ),
 
               const SizedBox(height: 40),
@@ -65,7 +97,8 @@ class _FlyerCreateScreenState extends State<FlyerCreateScreen> {
                         ? null
                         : () async {
                       final ok = await vm.salvarFlyer();
-                      if (ok && mounted) Navigator.pop(context);
+                      if (ok && mounted)Navigator.pop(context, true);
+
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
@@ -85,7 +118,7 @@ class _FlyerCreateScreenState extends State<FlyerCreateScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: const NavigationScreen(),
+
     );
   }
 }

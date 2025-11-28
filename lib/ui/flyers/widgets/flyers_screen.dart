@@ -7,8 +7,17 @@ import 'flyer_modal_widget.dart';
 class FlyersScreen extends StatefulWidget {
   const FlyersScreen({super.key});
 
+  static _FlyersScreenState? _instance;
+
+  static void refreshFlyers() {
+    _instance?.carregarNovamente();
+  }
+
   @override
-  State<FlyersScreen> createState() => _FlyersScreenState();
+  State<FlyersScreen> createState() {
+    _instance = _FlyersScreenState();
+    return _instance!;
+  }
 }
 
 class _FlyersScreenState extends State<FlyersScreen> {
@@ -17,6 +26,10 @@ class _FlyersScreenState extends State<FlyersScreen> {
   @override
   void initState() {
     super.initState();
+    vm.carregarFlyers();
+  }
+
+  void carregarNovamente() {
     vm.carregarFlyers();
   }
 
@@ -80,9 +93,9 @@ class _FlyersScreenState extends State<FlyersScreen> {
           },
         ),
       ),
-      bottomNavigationBar: const NavigationScreen(),
 
-      floatingActionButton: FloatingActionButton(
+
+      /*floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.yellow.shade700,
         onPressed: () {
           Navigator.pushNamed(context, "/create_flyers")
@@ -91,7 +104,7 @@ class _FlyersScreenState extends State<FlyersScreen> {
         child: const Icon(Icons.add, size: 32),
       ),
       floatingActionButtonLocation:
-      FloatingActionButtonLocation.centerDocked,
+      FloatingActionButtonLocation.centerDocked,*/
     );
   }
 }

@@ -12,7 +12,7 @@ class FlyerCreateViewModel {
   final LocalStorageService storage = LocalStorageService();
 
   final ValueNotifier<File?> imagemSelecionada = ValueNotifier(null);
-  final ValueNotifier<DateTime?> dataExpiracao = ValueNotifier(null);
+  DateTime? dataExpiracao;
   final ValueNotifier<bool> loading = ValueNotifier(false);
   final ValueNotifier<String?> error = ValueNotifier(null);
 
@@ -28,12 +28,13 @@ class FlyerCreateViewModel {
 
 
   void selecionarData(DateTime data) {
-    dataExpiracao.value = data;
+    dataExpiracao = data;
   }
+
 
   Future<bool> salvarFlyer() async {
     if (imagemSelecionada.value == null ||
-        dataExpiracao.value == null) {
+        dataExpiracao == null) {
       error.value = "Preencha todos os campos!";
       return false;
     }
@@ -49,7 +50,7 @@ class FlyerCreateViewModel {
       final flyer = Flyer(
         id: 0,
         fotoUrl: "temp",
-        dataExpiracao: dataExpiracao.value!,
+        dataExpiracao: dataExpiracao!,
         comercioId: comercioId,
       );
 

@@ -1,7 +1,3 @@
-import 'package:desconto_direto_comercio_mobile/data/model/flyer_model.dart';
-import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
-
-
 abstract final class Routes {
   static const primary = '/';
   static const auth = '/auth';
@@ -11,7 +7,5 @@ abstract final class Routes {
   static const profile = '/profile';
   static const editProfile = '/edit-profile';
   static const flyers = '/flyers';
-  static const flyers_create = '/create_flyers';
-  
+  static const flyerscreate = '/create_flyers';
 }
-
