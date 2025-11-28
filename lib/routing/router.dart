@@ -7,14 +7,34 @@ import 'package:desconto_direto_comercio_mobile/ui/profile/edit-profile-screen.d
 import 'package:desconto_direto_comercio_mobile/ui/profile/profile_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import '../ui/Navigation/widget/navigation_screen.dart';
+import '../ui/auth/view_models/auth_viewmodel.dart';
 import '../ui/auth/widgets/auth_screen.dart';
 import '../ui/register/widgets/register_screen.dart';
 import 'routes.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: Routes.primary,
+  initialLocation: Routes.auth,
   debugLogDiagnostics: true,
+  redirect: (BuildContext context, GoRouterState state) {
+    final authViewModel = Provider.of<AuthViewModel>(context, listen: false);
+
+    final isLoggingIn =
+        state.matchedLocation == Routes.auth ||
+        state.matchedLocation == Routes.register;
+    if (authViewModel.isAuthenticated) {
+      if (isLoggingIn) {
+        return Routes.primary;
+      }
+      return null;
+    } else {
+      if (!isLoggingIn) {
+        return Routes.auth;
+      }
+      return null;
+    }
+  },
   routes: <RouteBase>[
     GoRoute(
       path: Routes.primary,
@@ -75,9 +95,5 @@ final GoRouter appRouter = GoRouter(
         return const OfferEditScreen();
       },
     ),
-
-   
-
-    // Você pode adicionar rotas mais complexas aqui, se necessário.
   ],
 );

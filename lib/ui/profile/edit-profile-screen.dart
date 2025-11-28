@@ -10,9 +10,6 @@ class EditProfile extends StatefulWidget {
 }
 
 class EditProfileState extends State<EditProfile> {
-
-
-
   @override
   void initState() {
     super.initState();
@@ -24,11 +21,12 @@ class EditProfileState extends State<EditProfile> {
       appBar: AppBar(
         title: const Text(
           "Editar perfil",
-          style: TextStyle(color: AppColors.Yellow1),
+          style: TextStyle(color: AppColors.White1),
         ),
 
         centerTitle: true,
         backgroundColor: AppColors.Blue1,
+        iconTheme: const IconThemeData(color: AppColors.Yellow1),
       ),
       body: SingleChildScrollView(
         child: Padding(

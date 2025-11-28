@@ -30,12 +30,12 @@ class CommerceService {
     }
   }
 
-  Future<Commerce> login(String email, String password) async {
-    if (email.isEmpty || password.isEmpty) {
+  Future<Commerce> login(String email, String senha) async {
+    if (email.isEmpty || senha.isEmpty) {
       throw Exception('E-mail e senha são obrigatórios.');
     }
     try {
-      final commerce = await _repository.login(email, password);
+      final commerce = await _repository.login(email, senha);
       await _localStorage.saveToken(commerce.id.toString());
       return commerce;
     } catch (e) {

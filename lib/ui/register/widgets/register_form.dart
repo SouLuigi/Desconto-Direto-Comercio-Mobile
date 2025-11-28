@@ -71,7 +71,7 @@ class RegisterForm extends StatelessWidget {
             obscureText: true,
             validator: FormBuilderValidators.compose([
               FormBuilderValidators.required(),
-              FormBuilderValidators.minLength(4),
+              FormBuilderValidators.minLength(6),
             ]),
             onChanged: (value) => viewModel.setSenha(value ?? ''),
           ),

@@ -30,10 +30,10 @@ class _OfferCreateScreenState extends State<OfferCreateScreen> {
   }
 
   Future<void> carregarProdutos() async {
-    try {
-      final productService = ProductService(ProductRepository());
-      produtos = await productService.getAllProduct();
-    } catch (_) {}
+  final productService = ProductService(ProductRepository());
+
+  try {
+    final lista = await productService.getAll();
 
     setState(() => loading = false);
   }

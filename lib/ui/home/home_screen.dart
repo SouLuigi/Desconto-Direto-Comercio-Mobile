@@ -14,8 +14,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final String _commerceId = '2';
-
   @override
   void initState() {
     super.initState();

@@ -39,7 +39,7 @@ class CommerceRepository {
     }
   }
 
-  Future<Commerce> login(String email, String password) async {
+  Future<Commerce> login(String email, String senha) async {
     final uri = Uri.parse('$_baseUrl/comercios/login');
     final response = await http.post(
       uri,
@@ -48,7 +48,7 @@ class CommerceRepository {
       },
       body: jsonEncode({
         'email': email,
-        'senha': password,
+        'senha': senha,
       }),
     );
     if (response.statusCode == 201 || response.statusCode == 200) {

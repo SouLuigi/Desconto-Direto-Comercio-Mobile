@@ -1,4 +1,4 @@
-import 'dart:io';
+/*import 'dart:io';
 
 import 'package:desconto_direto_comercio_mobile/data/model/product_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/repositories/product_repository.dart';
@@ -52,4 +52,44 @@ class ProductService {
       return false;
     }
   }
+}*/
+import 'dart:io';
+
+import '../model/product_model.dart';
+import '../repositories/product_repository.dart';
+
+class ProductService {
+  final ProductRepository _repository;
+
+  ProductService(this._repository);
+
+  Future<Product> create(Product product) async {
+    return await _repository.create(product);
+  }
+
+  Future<List<Product>> getAll() async {
+    return await _repository.getAll();
+  }
+
+  Future<Product> getById(String id) async {
+    return await _repository.getById(id);
+  }
+
+  Future<Product> update(Product product) async {
+    return await _repository.update(product);
+  }
+
+  Future<void> delete(String id) async {
+    return await _repository.delete(id);
+  }
+
+  Future<bool> uploadImage(String id, File image) async {
+    try {
+      await _repository.uploadImage(id, image);
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
 }
+

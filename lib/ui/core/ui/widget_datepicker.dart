@@ -31,8 +31,8 @@ class CustomDatePicker extends StatelessWidget {
           DateTime? pickedDate = await showDatePicker(
             context: context,
             initialDate: initialDate ?? DateTime.now(),
-            firstDate: DateTime(1900), // Data mínima permitida
-            lastDate: DateTime.now(), // Data máxima (hoje)
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now().add(const Duration(days: 365)),
           );
 
           if (pickedDate != null) {
