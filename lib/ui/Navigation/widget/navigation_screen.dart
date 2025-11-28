@@ -4,10 +4,8 @@ import 'package:desconto_direto_comercio_mobile/data/services/commerce_service.d
 import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
 import 'package:desconto_direto_comercio_mobile/routing/routes.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
-import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyer_create_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:material_symbols_icons/material_symbols_icons.dart';
 
 import '../../flyers/widgets/flyers_screen.dart';
 import '../../home/home_screen.dart';
@@ -24,10 +22,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   Commerce? _commerce;
   bool _isLoading = true;
 
-  static const List<Widget> _screens = <Widget>[
-    HomeScreen(),
-    FlyersScreen(),
-  ];
+  static const List<Widget> _screens = <Widget>[HomeScreen(), FlyersScreen()];
 
   final _commerceRepository = CommerceRepository();
   final _localStore = LocalStorageService();
@@ -37,13 +32,14 @@ class _NavigationScreenState extends State<NavigationScreen> {
   @override
   void initState() {
     super.initState();
-    _token = "2";
+
     _commerceService = CommerceService(_commerceRepository, _localStore);
     _fetchCommerce();
   }
 
   void _fetchCommerce() async {
     try {
+      _token = await _localStore.getToken();
       final commerceData = await _commerceService.getCommerceById(_token);
       setState(() {
         _commerce = commerceData;
@@ -86,7 +82,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
     }
 
     final bool hasValidImage =
-          _commerce!.fotoUrl != null && _commerce!.fotoUrl!.isNotEmpty;
+        _commerce!.fotoUrl != null && _commerce!.fotoUrl!.isNotEmpty;
 
     final Widget profilePicture = CircleAvatar(
       backgroundColor: AppColors.Yellow1,
@@ -192,8 +188,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               child: _buildDrawerHeader(),
             ),
             ListTile(
-              leading: Icon(Icons.note_add
-                  , color: Colors.white),
+              leading: Icon(Icons.note_add, color: Colors.white),
               title: Text(
                 "Adicionar panfleto",
                 style: TextStyle(color: Colors.white),
@@ -202,8 +197,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
               onTap: () {
                 Navigator.pop(context);
                 context.push('/create_flyers');
-              }
-              ,
+              },
             ),
             ListTile(
               leading: Icon(Icons.new_label, color: Colors.white),
@@ -253,7 +247,6 @@ class _NavigationScreenState extends State<NavigationScreen> {
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: AppColors.White1, size: 35),
       ),*/
-
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.Yellow1,
         shape: const CircleBorder(),
@@ -278,7 +271,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
           }
         },
         child: Icon(
-              () {
+          () {
             switch (_selectedIndex) {
               case 0:
                 return Icons.local_offer;
@@ -314,7 +307,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 label: 'panfletos',
               ),
             ],
-              currentIndex: _selectedIndex.clamp(0, 1),
+            currentIndex: _selectedIndex.clamp(0, 1),
             selectedItemColor: AppColors.Yellow1,
             unselectedItemColor: Colors.grey,
             selectedLabelStyle: const TextStyle(fontSize: 14),

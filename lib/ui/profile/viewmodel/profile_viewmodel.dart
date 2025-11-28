@@ -19,6 +19,7 @@ class ProfileViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   Commerce? _commerce;
+  late final String _token;
   File? _selectedImageFile;
   final ImagePicker _picker = ImagePicker();
 
@@ -31,12 +32,13 @@ class ProfileViewModel extends ChangeNotifier {
 
   File? get selectedImageFile => _selectedImageFile;
 
-  String get token => '2';
+
 
   Future<void> loadCommerce() async {
     _setLoading(true);
+    _token= await _localStorage.getToken();
     try {
-      _commerce = await _service.getCommerceById(token);
+      _commerce = await _service.getCommerceById(_token);
       _errorMessage = null;
     } catch (e) {
       _errorMessage = "Erro ao carregar dados: $e";
@@ -74,7 +76,7 @@ class ProfileViewModel extends ChangeNotifier {
 
     _setLoading(true);
     try {
-      await _service.uploadImageOfCommerce(token, _selectedImageFile!);
+      await _service.uploadImageOfCommerce(_token, _selectedImageFile!);
 
       await loadCommerce();
 
@@ -90,7 +92,7 @@ class ProfileViewModel extends ChangeNotifier {
   Future<void> deleteAccount() async {
     _setLoading(true);
     try {
-      await _service.deleteCommerce(token);
+      await _service.deleteCommerce(_token);
     } catch (e) {
       _errorMessage = "Erro ao deletar conta";
       print(e);
