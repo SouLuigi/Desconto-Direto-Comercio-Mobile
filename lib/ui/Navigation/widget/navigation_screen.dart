@@ -26,7 +26,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
 
   final _commerceRepository = CommerceRepository();
   final _localStore = LocalStorageService();
-  late final String _token;
+  late final String? _token;
   late final CommerceService _commerceService;
 
   @override
@@ -40,7 +40,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
   void _fetchCommerce() async {
     try {
       _token = await _localStore.getToken();
-      final commerceData = await _commerceService.getCommerceById(_token);
+      final commerceData = await _commerceService.getCommerceById(_token!);
       setState(() {
         _commerce = commerceData;
         _isLoading = false;

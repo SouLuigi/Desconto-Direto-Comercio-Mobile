@@ -42,7 +42,7 @@ class EditProfileViewModel extends ChangeNotifier {
   bool _isLoading = false;
   String? _errorMessage;
   Commerce? _commerce;
-  late final String _token;
+  late final String? _token;
 
 
   File? _selectedImageFile;
@@ -65,7 +65,7 @@ class EditProfileViewModel extends ChangeNotifier {
     _setLoading(true);
     _token = await _localStorage.getToken();
     try {
-      _commerce = await _service.getCommerceById(_token);
+      _commerce = await _service.getCommerceById(_token!);
       print(_commerce);
       _errorMessage = null;
       _isLoading = false;

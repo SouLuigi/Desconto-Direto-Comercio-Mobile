@@ -15,9 +15,7 @@ class AuthViewModel extends ChangeNotifier {
 
   bool _isLoading = false;
   String? _errorMessage;
-
-  late final String _token;
-
+  late final String? _token;
   Commerce? _currentCommerce;
 
   bool get isLoading => _isLoading;
@@ -42,7 +40,7 @@ class AuthViewModel extends ChangeNotifier {
         _errorMessage = e.toString().replaceAll('Exception: ', '');
       }
       finally {
-        _setLoginStatus(false);
+        _setLoginStatus(true);
       }
       notifyListeners();
     }
@@ -52,14 +50,12 @@ class AuthViewModel extends ChangeNotifier {
     _setLoginStatus(true);
     try {
       final commerce = await _service.login(email, password);
-      print(commerce.toJson());
       _currentCommerce = commerce;
       _localStorageService.saveToken(commerce.id.toString());
+      _setLoginStatus(true);
     } catch (e) {
       _errorMessage = e.toString().replaceAll('Exception: ', '');
-    }
-    finally {
-      _setLoginStatus(false);
+      _setLoginStatus(true);
     }
   }
 
@@ -70,7 +66,7 @@ class AuthViewModel extends ChangeNotifier {
 
   void resetStatus() {
     _isLoading = false;
-    _errorMessage = null;
+    _errorMessage = '';
     notifyListeners();
   }
 }
