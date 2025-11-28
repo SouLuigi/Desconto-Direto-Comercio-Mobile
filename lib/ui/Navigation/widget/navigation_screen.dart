@@ -212,7 +212,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
-                Navigator.pop(context);
+                context.push('/offer');
               },
             ),
             ListTile(
@@ -260,7 +260,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         onPressed: () async {
           switch (_selectedIndex) {
             case 0:
-              context.push('/offer-create');
+              context.push('/offer');
               break;
 
             case 1:
