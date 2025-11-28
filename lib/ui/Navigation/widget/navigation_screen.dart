@@ -216,7 +216,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 style: TextStyle(color: Colors.white),
               ),
               onTap: () {
-                Navigator.pop(context);
+                context.push('/create_product');
               },
             ),
 
@@ -230,8 +230,8 @@ class _NavigationScreenState extends State<NavigationScreen> {
                 ),
               ),
               onTap: () {
-                Navigator.pop(context); // Fecha o Drawer primeiro
-                _logout(context); // Chama a função de logout
+                Navigator.pop(context);
+                _logout(context);
               },
             ),
           ],

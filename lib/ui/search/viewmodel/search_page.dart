@@ -32,7 +32,7 @@ class _SearchPageState extends State<SearchPage> {
 
   Future<void> carregarProdutos() async {
     try {
-      final lista = await productService.getAllProduct();
+      final lista = await productService.getAll();
 
       setState(() {
         produtos = lista;
