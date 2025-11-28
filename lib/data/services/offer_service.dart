@@ -51,8 +51,7 @@ class OfferService {
       offer.validade.day,
     );
     if (offer.comercioId <= 0 ||
-        validityDate.isBefore(today) ||
-        offer.produto == null|| offer.preco <= 0) {
+        validityDate.isBefore(today)|| offer.preco <= 0) {
       throw Exception("Dados inválidos para cadastrar oferta!");
     }
 
@@ -73,8 +72,7 @@ class OfferService {
       offer.validade.day,
     );
     if (offer.comercioId <= 0 ||
-        validityDate.isBefore(today) ||
-        offer.produto == null || offer.preco <= 0) {
+        validityDate.isBefore(today) || offer.preco <= 0) {
       throw Exception("Dados inválidos para cadastrar oferta!");
     }
     try {
@@ -84,7 +82,7 @@ class OfferService {
       rethrow;
     }
   }
-  Future<void> deleteOffer(String id) async {
+  Future<void> deleteOffer(int id) async {
     try {
       await _repository.delete(id);
     } catch (e) {

@@ -150,8 +150,8 @@ class CommerceRepository {
   }
 
   Future<void> uploadImage(String id, File image) async {
-    final _baseUrl = ApiConfig.baseUrl;
-    final uri = Uri.parse('$_baseUrl/comercios/upload-foto-comercio/$id');
+    final baseUrl = ApiConfig.baseUrl;
+    final uri = Uri.parse('$baseUrl/comercios/upload-foto-comercio/$id');
     final request = http.MultipartRequest('POST', uri);
     final fileMultipart = await http.MultipartFile.fromPath('photo', image.path);
     request.files.add(fileMultipart);

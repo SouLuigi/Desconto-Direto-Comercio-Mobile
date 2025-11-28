@@ -1,5 +1,6 @@
 import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/themes/colors.dart';
+import 'package:desconto_direto_comercio_mobile/ui/home/view_models/home_viewmodel.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
@@ -120,114 +121,118 @@ class _WidgetCardOfferState extends State<WidgetCardOffer> {
               ],
             ),
           ),
+if (showMenu)
+  Positioned.fill(
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.black.withOpacity(0.45),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Stack(
+        children: [
+          Center(
+            child: Column(
+              spacing: 10,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                // BOTÃO EDITAR
+                GestureDetector(
+                  onTap: () {
+                    setState(() => showMenu = false);
 
-          if (showMenu)
-            Padding(
-              padding: const EdgeInsets.all(6.0),
-              child: Positioned.fill(
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.45),
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Stack(
-                    children: [
-                      Center(
-                        child: Column(
-                          spacing: 10,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            // BOTÃO EDITAR
-                            GestureDetector(
-                              onTap: () {
-                                setState(() => showMenu = false);
-                                context.read<OfferViewModel>().selectOffer(
-                                  widget.offer,
-                                );
-                                context.push(Routes.offer_edit);
-                              },
-                              child: Container(
-                                width: 140,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.amber.shade600,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: const Text(
-                                  "Editar",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: AppColors.White1,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            GestureDetector(
-                              onTap: () async {
-                                final vm = context.read<OfferViewModel>();
-                                final ok = await vm.deleteOffer(
-                                  widget.offer.id.toString(),
-                                );
+                    // Salva a oferta selecionada no ViewModel
+                    context.read<OfferViewModel>().selectOffer(widget.offer);
 
-                                setState(() => showMenu = false);
-
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text(
-                                      ok
-                                          ? "Oferta excluída com sucesso!"
-                                          : "Erro ao excluir a oferta",
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: 140,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 12,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.red.shade700,
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                                child: const Text(
-                                  "Excluir",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: AppColors.White1,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                    // Navega para a rota de edição
+                    context.push(Routes.offer_edit);
+                  },
+                  child: Container(
+                    width: 140,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.amber.shade600,
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    child: const Text(
+                      "Editar",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: AppColors.White1,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-
-                      Positioned(
-                        right: 5,
-                        bottom: 5,
-                        child: GestureDetector(
-                          onTap: () => setState(() => showMenu = !showMenu),
-                          child: const Icon(
-                            Icons.settings,
-                            color: AppColors.White1,
-                            size: 26,
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
+
+                // BOTÃO EXCLUIR
+GestureDetector(
+  onTap: () async {
+    final offerVm = context.read<OfferViewModel>();
+    final pageVm = context.read<HomeViewmodel>(); // VM da tela
+
+    final ok = await offerVm.deleteOffer(widget.offer.id);
+
+    if (ok) {
+      await pageVm.loadOffers();  // 🔥 Atualiza a página automaticamente
+    }
+
+    if (!mounted) return;
+    setState(() => showMenu = false);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          ok
+              ? "Oferta excluída com sucesso!"
+              : "Erro ao excluir a oferta",
+        ),
+      ),
+    );
+  },
+  child: Container(
+    width: 140,
+    padding: const EdgeInsets.symmetric(vertical: 12),
+    decoration: BoxDecoration(
+      color: Colors.red.shade700,
+      borderRadius: BorderRadius.circular(30),
+    ),
+    child: const Text(
+      "Excluir",
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: AppColors.White1,
+        fontSize: 16,
+        fontWeight: FontWeight.bold,
+      ),
+    ),
+  ),
+),
+
+              ],
+            ),
+          ),
+
+          // ÍCONE DE CONFIG PARA FECHAR O MENU
+          Positioned(
+            right: 5,
+            bottom: 5,
+            child: GestureDetector(
+              onTap: () => setState(() => showMenu = !showMenu),
+              child: const Icon(
+                Icons.settings,
+                color: AppColors.White1,
+                size: 26,
               ),
             ),
+          ),
+        ],
+      ),
+    ),
+  ),
+
         ],
       ),
     );
-  }
+  } 
 }

@@ -12,7 +12,7 @@ class CustomInput extends StatelessWidget {
   final String? Function(String?)? validator;
 
   const CustomInput({
-    Key? key,
+    super.key,
     required this.label,
     required this.controller,
     this.hint,
@@ -20,7 +20,7 @@ class CustomInput extends StatelessWidget {
     this.isObscure = false,
     this.icon,
     this.validator,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -4,12 +4,13 @@ import 'package:provider/provider.dart';
 
 import 'package:desconto_direto_comercio_mobile/data/model/product_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
+
 import '../view_models/offer_viewmodel.dart';
+
+// Widgets customizados do projeto
 import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_textField.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_dropdown.dart';
 import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_datepicker.dart';
-
-// NOVO IMPORT
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/widget_campo_nao_editavel.dart';
 
 class OfferCreateForm extends StatefulWidget {
@@ -37,12 +38,13 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<OfferViewModel>();
     final nomesProdutos = widget.produtos.map((p) => p.nome).toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // ------------------ PRODUTOS (CustomDropdown) ------------------
+        // =============== DROPDOWN DO PRODUTO =====================
         CustomDropdown(
           label: "Selecione o Produto",
           items: nomesProdutos,
@@ -64,7 +66,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
 
         const SizedBox(height: 25),
 
-        // ------------------ IMAGEM DO PRODUTO ------------------
+        // =============== IMAGEM =====================
         Container(
           width: double.infinity,
           height: 250,
@@ -87,7 +89,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
 
         const SizedBox(height: 25),
 
-        // ------------------ CAMPOS NÃO EDITÁVEIS (ATUALIZADOS) ------------------
+        // =============== CAMPOS NÃO EDITÁVEIS =====================
         if (produtoSelecionado != null) ...[
           CampoNaoEditavel(
             label: "Nome do Produto",
@@ -116,16 +118,16 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
           const SizedBox(height: 20),
 
           CampoNaoEditavel(
-            label: "Categoria do Produto",
+            label: "Categoria",
             value: categoria.text,
           ),
 
           const SizedBox(height: 20),
         ],
 
-        // ------------------ DATA ------------------
+        // =============== DATA =====================
         CustomDatePicker(
-          label: "Data de Postagem",
+          label: "Validade da Oferta",
           controller: data,
           initialDate: DateTime.now(),
           onDateSelected: (picked) {
@@ -136,7 +138,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
 
         const SizedBox(height: 10),
 
-        // ------------------ PREÇO ------------------
+        // =============== PREÇO =====================
         CustomInput(
           label: "Preço",
           controller: preco,
@@ -147,7 +149,7 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
 
         const SizedBox(height: 30),
 
-        // ------------------ BOTÃO POSTAR ------------------
+        // =============== BOTÃO POSTAR =====================
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -158,43 +160,50 @@ class _OfferCreateFormState extends State<OfferCreateForm> {
               ),
               padding: const EdgeInsets.symmetric(vertical: 16),
             ),
+            child: const Text(
+              "Postar",
+              style: TextStyle(fontSize: 18, color: Colors.white),
+            ),
             onPressed: () async {
               if (produtoSelecionado == null) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Selecione um produto antes de postar."),
+                  const SnackBar(content: Text("Selecione um produto.")),
+                );
+                return;
+              }
+
+              final offer = _montarOferta(produtoSelecionado!);
+              final ok = await vm.createOffer(offer);
+
+              if (!ok) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      vm.errorMessage ?? "Erro ao cadastrar oferta.",
+                    ),
                   ),
                 );
                 return;
               }
 
-              final ok = await context.read<OfferViewModel>().createOffer(
-                    _montarOferta(produtoSelecionado!),
-                  );
-
-              if (ok) Navigator.pop(context);
+              Navigator.pop(context);
             },
-            child: const Text(
-              "Postar",
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
           ),
         ),
       ],
     );
   }
 
-  // ------------------ HELPERS ------------------
-
+  // =============== MONTA OFERTA PARA O BACKEND =====================
   Offer _montarOferta(Product p) {
     return Offer(
       id: 0,
-      validade: DateFormat("MM/dd/yyyy").parse(data.text),
-      dataPostagem: DateTime.now(),
-      comercioId: 1,
-      likes: 0,
-      preco: double.parse(preco.text.replaceAll(',', '.')),
+      comercioId: 1, // será substituído no ViewModel pelo ID correto
       produto: p,
+      dataPostagem: DateTime.now(),
+      validade: DateFormat("MM/dd/yyyy").parse(data.text),
+      preco: double.parse(preco.text.replaceAll(',', '.')),
+      likes: 0,
     );
   }
 }
