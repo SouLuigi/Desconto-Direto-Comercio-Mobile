@@ -30,7 +30,7 @@ class _OfferCreateScreenState extends State<OfferCreateScreen> {
   final productService = ProductService(ProductRepository());
 
   try {
-    final lista = await productService.getAllProduct(); 
+    final lista = await productService.getAll();
 
     print(">>> PRODUTOS RECEBIDOS: ${lista.length}");
 
