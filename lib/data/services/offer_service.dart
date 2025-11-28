@@ -82,7 +82,7 @@ class OfferService {
       rethrow;
     }
   }
-  Future<void> deleteOffer(String id) async {
+  Future<void> deleteOffer(int id) async {
     try {
       await _repository.delete(id);
     } catch (e) {

@@ -1,22 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
-import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_textField.dart';
-import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_datepicker.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/view_models/offer_viewmodel.dart';
 
+import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/widget_appbar_offer.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/widget_campo_nao_editavel.dart';
 
-class OfferEditForm extends StatefulWidget {
-  const OfferEditForm({super.key});
+import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_textField.dart';
+import 'package:desconto_direto_comercio_mobile/ui/core/ui/widget_datepicker.dart';
+
+class OfferEditScreen extends StatefulWidget {
+  const OfferEditScreen({super.key});
 
   @override
-  State<OfferEditForm> createState() => _OfferEditFormState();
+  State<OfferEditScreen> createState() => _OfferEditScreenState();
 }
 
-class _OfferEditFormState extends State<OfferEditForm> {
+class _OfferEditScreenState extends State<OfferEditScreen> {
   final preco = TextEditingController();
   final data = TextEditingController();
 
@@ -41,142 +43,158 @@ class _OfferEditFormState extends State<OfferEditForm> {
     final offer = vm.selectedOffer!;
     final product = offer.produto;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // --------------------------------------
-        // IMAGEM
-        // --------------------------------------
-        Container(
-          width: double.infinity,
-          height: 250,
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.orange, width: 2),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          alignment: Alignment.center,
-          child: (product.fotoUrl.isEmpty)
-              ? const Icon(Icons.broken_image, size: 80)
-              : Image.network(
-                  product.fotoUrl,
-                  height: 200,
-                  fit: BoxFit.contain,
-                  errorBuilder: (_, __, ___) =>
-                      const Icon(Icons.broken_image, size: 80),
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+
+        appBar: const AppBarPadrao(
+          titulo: "Editar Oferta",
+        ),
+
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+
+              // ============================
+              // IMAGEM
+              // ============================
+              Container(
+                width: double.infinity,
+                height: 250,
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.orange, width: 2),
+                  borderRadius: BorderRadius.circular(12),
                 ),
-        ),
-
-        const SizedBox(height: 25),
-
-        // --------------------------------------
-        // CAMPOS NÃO EDITÁVEIS 
-        // --------------------------------------
-        CampoNaoEditavel(
-          label: "Nome do Produto",
-          value: product.nome,
-        ),
-        const SizedBox(height: 15),
-
-        Row(
-          children: [
-            Expanded(
-              child: CampoNaoEditavel(
-                label: "Medida",
-                value: product.medida,
+                alignment: Alignment.center,
+                child: (product.fotoUrl.isEmpty)
+                    ? const Icon(Icons.broken_image, size: 80)
+                    : Image.network(
+                        product.fotoUrl,
+                        height: 200,
+                        fit: BoxFit.contain,
+                      ),
               ),
-            ),
-            const SizedBox(width: 15),
-            Expanded(
-              child: CampoNaoEditavel(
-                label: "Unidade",
-                value: product.unidadeMedida,
-              ),
-            ),
-          ],
-        ),
 
-        const SizedBox(height: 15),
+              const SizedBox(height: 25),
 
-        CampoNaoEditavel(
-          label: "Categoria",
-          value: product.categoria,
-        ),
+              // ============================
+              // CAMPOS NÃO EDITÁVEIS
+              // ============================
+              CampoNaoEditavel(label: "Nome do Produto", value: product.nome),
+              const SizedBox(height: 15),
 
-        const SizedBox(height: 20),
-
-        // --------------------------------------
-        // DATE PICKER EDITÁVEL
-        // --------------------------------------
-        CustomDatePicker(
-          label: "Validade da Oferta",
-          controller: data,
-          initialDate: offer.validade,
-          onDateSelected: (picked) {
-            data.text = DateFormat("MM/dd/yyyy").format(picked);
-          },
-        ),
-
-        const SizedBox(height: 10),
-
-        // --------------------------------------
-        // PREÇO
-        // --------------------------------------
-        CustomInput(
-          label: "Preço",
-          controller: preco,
-          keyboardType: TextInputType.number,
-          icon: Icons.attach_money,
-        ),
-
-        const SizedBox(height: 30),
-
-        // --------------------------------------
-        // BOTÃO SALVAR
-        // --------------------------------------
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.orange,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30),
-              ),
-            ),
-            onPressed: () async {
-              final updated = _buildUpdatedOffer(offer);
-
-              final ok = await vm.updateOffer(updated);
-
-              if (ok && mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text("Oferta atualizada com sucesso!"),
+              Row(
+                children: [
+                  Expanded(
+                    child: CampoNaoEditavel(
+                      label: "Medida",
+                      value: product.medida,
+                    ),
                   ),
-                );
-                Navigator.pop(context);
-              }
-            },
-            child: const Text(
-              "Salvar Alterações",
-              style: TextStyle(fontSize: 18, color: Colors.white),
-            ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: CampoNaoEditavel(
+                      label: "Unidade",
+                      value: product.unidadeMedida,
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 15),
+
+              CampoNaoEditavel(
+                label: "Categoria",
+                value: product.categoria,
+              ),
+
+              const SizedBox(height: 20),
+
+              // ============================
+              // DATE PICKER
+              // ============================
+              CustomDatePicker(
+                label: "Validade",
+                controller: data,
+                initialDate: offer.validade,
+                onDateSelected: (picked) {
+                  data.text = DateFormat("MM/dd/yyyy").format(picked);
+                },
+              ),
+
+              const SizedBox(height: 15),
+
+              // ============================
+              // PREÇO EDITÁVEL
+              // ============================
+              CustomInput(
+                label: "Preço",
+                controller: preco,
+                keyboardType: TextInputType.number,
+                icon: Icons.attach_money,
+              ),
+
+              const SizedBox(height: 30),
+
+              // ============================
+              // BOTÃO SALVAR ALTERAÇÕES
+              // ============================
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                  ),
+                  onPressed: () async {
+                    debugPrint(">>> [DEBUG] Botão SALVAR clicado");
+
+                    final offerFinal = _montarOfertaAtualizada(offer);
+
+                    final ok = await vm.updateOffer(offerFinal);
+                    debugPrint(">>> [DEBUG] Resultado updateOffer: $ok");
+
+                    if (!ok) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            vm.errorMessage ?? "Erro ao atualizar oferta.",
+                          ),
+                        ),
+                      );
+                      return;
+                    }
+
+                    if (mounted) Navigator.pop(context);
+                  },
+                  child: const Text(
+                    "Salvar Alterações",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 
-  // ------------------------------------------
-  // MONTA A NOVA OFERTA
-  // ------------------------------------------
-  Offer _buildUpdatedOffer(Offer old) {
+  // ================================================================
+  // RECONSTRÓI A OFERTA (SEM copyWith!)
+  // ================================================================
+  Offer _montarOfertaAtualizada(Offer old) {
     return Offer(
       id: old.id,
-      comercioId: old.comercioId,
+      produto: old.produto,
       dataPostagem: old.dataPostagem,
       likes: old.likes,
-      produto: old.produto,
+      comercioId: old.comercioId, // sobrescrito no VM!
       preco: double.parse(preco.text.replaceAll(',', '.')),
       validade: DateFormat("MM/dd/yyyy").parse(data.text),
     );

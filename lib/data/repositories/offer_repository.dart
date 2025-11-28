@@ -126,7 +126,7 @@ class OfferRepository {
     }
   }
 
-  Future<void> delete(String id) async {
+  Future<void> delete(int id) async {
     final uri = Uri.parse('$_baseUrl/ofertas/delete/$id');
     final response = await http.delete(
       uri,

@@ -259,7 +259,7 @@ class _NavigationScreenState extends State<NavigationScreen> {
         onPressed: () async {
           switch (_selectedIndex) {
             case 0:
-              context.push('/offer-create');
+              context.push('/offer');
               break;
 
             case 1:

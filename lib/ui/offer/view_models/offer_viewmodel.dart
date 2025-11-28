@@ -1,127 +1,148 @@
 import 'package:flutter/material.dart';
 import 'package:desconto_direto_comercio_mobile/data/model/offer_model.dart';
 import 'package:desconto_direto_comercio_mobile/data/services/offer_service.dart';
+import 'package:desconto_direto_comercio_mobile/data/services/flutter_secure_storage.dart';
 
 class OfferViewModel extends ChangeNotifier {
-  final OfferService _service;
+  final OfferService service;
+  final LocalStorageService storage = LocalStorageService();
 
-  OfferViewModel(this._service);
+  OfferViewModel(this.service);
 
-  bool isLoading = false;
+  // ESTADOS
+  final ValueNotifier<bool> loading = ValueNotifier(false);
   String? errorMessage;
 
   List<Offer> offers = [];
   Offer? selectedOffer;
 
-  // ----------------------------
+  // ============================================================
   // SELECIONAR OFERTA PARA EDIÇÃO
-  // ----------------------------
+  // ============================================================
   void selectOffer(Offer offer) {
     selectedOffer = offer;
     notifyListeners();
   }
 
-  // ----------------------------
-  // GET ALL OFFERS
-  // ----------------------------
+  // ============================================================
+  // CARREGAR TODAS AS OFERTAS DO COMÉRCIO LOGADO
+  // ============================================================
   Future<void> fetchAllOffers() async {
+    loading.value = true;
+    errorMessage = null;
+
     try {
-      isLoading = true;
-      notifyListeners();
+      // 1️⃣ Identifica comércio logado
+      final token = await storage.getToken();
+      if (token == null) throw Exception("Usuário não autenticado.");
+      final comercioIdLogado = int.parse(token);
 
-      offers = await _service.getAllOffers();
+      // 2️⃣ Busca TODAS da API
+      final lista = await service.getAllOffers();
 
-      isLoading = false;
-      notifyListeners();
+      // 3️⃣ Filtra apenas do comércio logado
+      offers = lista.where((o) => o.comercioId == comercioIdLogado).toList();
+
     } catch (e) {
-      isLoading = false;
       errorMessage = e.toString();
-      notifyListeners();
     }
+
+    loading.value = false;
+    notifyListeners();
   }
 
-  // ----------------------------
-  // GET OFFER BY ID
-  // ----------------------------
-  Future<void> fetchOfferById(String id) async {
+  // ============================================================
+  // CREATE (Comércio já aplicado via token)
+  // ============================================================
+  Future<bool> createOffer(Offer originalOffer) async {
+    loading.value = true;
+    errorMessage = null;
+
     try {
-      isLoading = true;
-      notifyListeners();
+      final token = await storage.getToken();
+      if (token == null) throw Exception("Usuário não autenticado.");
+      final comercioId = int.parse(token);
 
-      selectedOffer = await _service.getOfferById(id);
+      // 🔥 Monta oferta final com comercioId correto
+      final newOffer = Offer(
+        id: 0,
+        comercioId: comercioId,
+        dataPostagem: originalOffer.dataPostagem,
+        validade: originalOffer.validade,
+        likes: 0,
+        preco: originalOffer.preco,
+        produto: originalOffer.produto,
+      );
 
-      isLoading = false;
-      notifyListeners();
-    } catch (e) {
-      isLoading = false;
-      errorMessage = e.toString();
-      notifyListeners();
-    }
-  }
+      await service.createNewOffer(newOffer);
 
-  // ----------------------------
-  // CREATE OFFER
-  // ----------------------------
-  Future<bool> createOffer(Offer offer) async {
-    try {
-      isLoading = true;
-      notifyListeners();
-
-      await _service.createNewOffer(offer);
-
-      isLoading = false;
-      notifyListeners();
+      loading.value = false;
       return true;
     } catch (e) {
-      isLoading = false;
       errorMessage = e.toString();
-      notifyListeners();
+      loading.value = false;
       return false;
     }
   }
 
-  // ----------------------------
-  // EDIT OFFER
-  // ----------------------------
-  Future<bool> updateOffer(Offer offer) async {
+  // ============================================================
+  // UPDATE
+  // ============================================================
+  Future<bool> updateOffer(Offer updated) async {
+    loading.value = true;
+    errorMessage = null;
+
     try {
-      isLoading = true;
-      notifyListeners();
+      final token = await storage.getToken();
+      if (token == null) throw Exception("Usuário não autenticado.");
+      final comercioId = int.parse(token);
 
-      await _service.editOffer(offer);
+      // 🔥 Garante que comercioId é o do usuário logado
+      final offerToSend = Offer(
+        id: updated.id,
+        comercioId: comercioId,
+        dataPostagem: updated.dataPostagem,
+        validade: updated.validade,
+        produto: updated.produto,
+        likes: updated.likes,
+        preco: updated.preco,
+      );
 
-      isLoading = false;
-      notifyListeners();
+      await service.editOffer(offerToSend);
+
+      loading.value = false;
       return true;
     } catch (e) {
-      isLoading = false;
       errorMessage = e.toString();
-      notifyListeners();
+      loading.value = false;
       return false;
     }
   }
 
-  // ----------------------------
-  // DELETE OFFER (CORRIGIDO)
-  // ----------------------------
-  Future<bool> deleteOffer(String id) async {
-    try {
-      isLoading = true;
-      notifyListeners();
+  // ============================================================
+  // DELETE
+  // ============================================================
+ Future<bool> deleteOffer(int id) async {
+  loading.value = true;
+  errorMessage = null;
 
-      await _service.deleteOffer(id);
+  try {
+    await service.deleteOffer(id);
 
-      // REMOVE LOCALMENTE DA LISTA
-      offers.removeWhere((o) => o.id.toString() == id);
+    // Remove local
+    offers.removeWhere((o) => o.id == id);
 
-      isLoading = false;
-      notifyListeners();
-      return true;
-    } catch (e) {
-      isLoading = false;
-      errorMessage = e.toString();
-      notifyListeners();
-      return false;
-    }
+    // 🔥 Atualiza lista completa da API
+    await fetchAllOffers();
+
+    loading.value = false;
+    notifyListeners();
+    return true;
+  } catch (e) {
+    errorMessage = e.toString();
+    loading.value = false;
+    return false;
   }
+}
+
 }

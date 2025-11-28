@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'offer_create_form.dart';
 import '../../../data/services/offer_service.dart';
-import '../../../data/services/product_service.dart';
 import '../../../data/repositories/offer_repository.dart';
+import '../../../data/services/product_service.dart';
 import '../../../data/repositories/product_repository.dart';
+
+import 'offer_create_form.dart';
 import '../view_models/offer_viewmodel.dart';
-import 'package:desconto_direto_comercio_mobile/data/model/product_model.dart';
-import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/widget_appbar_offer.dart';
+import '../../../data/model/product_model.dart';
+
+import 'widget_appbar_offer.dart';
+
 class OfferCreateScreen extends StatefulWidget {
   const OfferCreateScreen({super.key});
 
@@ -27,49 +30,31 @@ class _OfferCreateScreenState extends State<OfferCreateScreen> {
   }
 
   Future<void> carregarProdutos() async {
-  final productService = ProductService(ProductRepository());
+    try {
+      final productService = ProductService(ProductRepository());
+      produtos = await productService.getAllProduct();
+    } catch (_) {}
 
-  try {
-    final lista = await productService.getAllProduct(); 
-
-    print(">>> PRODUTOS RECEBIDOS: ${lista.length}");
-
-    for (var p in lista) {
-      print(">>> Produto: ${p.nome} | Medida: ${p.medida} | Categoria: ${p.categoria}");
-    }
-
-    setState(() {
-      produtos = lista;
-      loading = false;
-    });
-
-  } catch (e) {
-    print(">>> ERRO AO CARREGAR PRODUTOS: $e");
     setState(() => loading = false);
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
+      child: ChangeNotifierProvider(
+        create: (_) => OfferViewModel(OfferService(OfferRepository())),
+        child: Scaffold(
+          backgroundColor: Colors.white,
 
-       appBar: const AppBarPadrao(
-  titulo: "Criar Oferta",
-),
+          appBar: const AppBarPadrao(titulo: "Criar Oferta"),
 
-        body: loading
-            ? const Center(child: CircularProgressIndicator())
-            : ChangeNotifierProvider(
-                create: (_) =>
-                    OfferViewModel(OfferService(OfferRepository())),
-                child: SingleChildScrollView(
+          body: loading
+              ? const Center(child: CircularProgressIndicator())
+              : SingleChildScrollView(
                   padding: const EdgeInsets.all(20),
                   child: OfferCreateForm(produtos: produtos),
                 ),
-              ),
+        ),
       ),
     );
   }
