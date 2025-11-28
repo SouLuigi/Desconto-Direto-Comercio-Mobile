@@ -21,6 +21,15 @@ class FlyerModalWidget extends StatelessWidget {
       ),
       child: Column(
         children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              icon: const Icon(Icons.close, color: Colors.black, size: 30),
+              onPressed: () => Navigator.pop(context),
+            ),
+          ),
+
+          const SizedBox(height: 10),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(20),

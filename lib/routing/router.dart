@@ -1,6 +1,6 @@
 import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyer_create_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/flyers/widgets/flyers_screen.dart';
-
+import 'package:desconto_direto_comercio_mobile/ui/product/widget/product_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_create_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/offer/widgets/offer_edit_screen.dart';
 import 'package:desconto_direto_comercio_mobile/ui/profile/edit-profile-screen.dart';
@@ -73,6 +73,12 @@ final GoRouter appRouter = GoRouter(
       path: Routes.offer_edit,
       builder: (BuildContext context, GoRouterState state) {
         return const OfferEditScreen();
+      },
+    ),
+    GoRoute(
+      path: Routes.product,
+      builder: (BuildContext context, GoRouterState state) {
+        return const ProductCreateScreen();
       },
     ),
 
