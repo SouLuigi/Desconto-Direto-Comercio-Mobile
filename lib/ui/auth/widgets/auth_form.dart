@@ -65,7 +65,8 @@ class AuthForm extends StatelessWidget {
                         ),
                       ),
                     ),
-                    WidgetButton(text: isLoading ? 'Entrando...' : 'Entrar',
+                    WidgetButton(
+                      text: isLoading ? 'Entrando...' : 'Entrar',
                       onPressed: isLoading
                           ? null
                           : () {

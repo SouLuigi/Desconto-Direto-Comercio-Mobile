@@ -15,7 +15,7 @@ class AuthViewModel extends ChangeNotifier {
 
   bool _isLoading = false;
   String? _errorMessage;
-
+  late final String _token;
   Commerce? _currentCommerce;
 
   bool get isLoading => _isLoading;
@@ -29,11 +29,11 @@ class AuthViewModel extends ChangeNotifier {
   AuthViewModel(this._localStorageService, this._commerceRepository);
 
   Future<void> checkAuthenticationStatus() async {
-    final token = await _service.localStorage.getToken();
-    if (token != null) {
+     _token = await _localStorageService.getToken();
+    if (_token != null) {
       _setLoginStatus(true);
       try {
-        final commerce = await _service.getCommerceById(token);
+        final commerce = await _service.getCommerceById(_token);
         _currentCommerce = commerce;
       }
       catch (e) {
@@ -51,6 +51,7 @@ class AuthViewModel extends ChangeNotifier {
     try {
       final commerce = await _service.login(email, password);
       _currentCommerce = commerce;
+      _localStorageService.saveToken(commerce.id.toString());
       _setLoginStatus(true);
     } catch (e) {
       _errorMessage = e.toString().replaceAll('Exception: ', '');
